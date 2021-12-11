@@ -64,6 +64,7 @@
         } else if (checkboxRequired) {
             const terms = document.querySelector("#terms");
             const mainContainerBtn = document.querySelector(".btn");
+            mainContainerBtn.setAttribute("disabled", true);
             terms.addEventListener("click", (e) => {
                 const {target: {checked}} = e;
                 !checked ? mainContainerBtn.setAttribute("disabled", true) : mainContainerBtn.removeAttribute("disabled");
