@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="./script.js" defer></script>
+</head>
+<body>
+    <div class="app">
+        <textarea name="" cols="30" rows="10" id="inputs"></textarea>
+        <div class="main-container">
+            <div class="wheel-container">
+                <div class="pointer-container">
+                    <img class="pointer" src="./pointer3.png" alt="" width="40px">
+                </div>
+                <div class="canvas-container">
+                    <div class="spinning">
+                        <canvas id="myCanvas"></canvas>
+                        <div class="info"></div>
+                    </div>
+                    <div class="inner"></div>
+                </div>
+            </div>
+            <div class="form-container">
+                <h1>Spin to Win!</h1>
+                <h3>Enter your email for the chance to win!</h3>
+                <input type="text" placeholder="Your Email"/>
+                <div class="d-flex-row">
+                    <input type="checkbox" name="terms" id="terms">
+    
+                    <label for="terms" class="terms-label">
+                        <p>I agree to receive an email that'll allow me to claim my prize and helpful email series from BloggersIdeas.com</p>
+                    </label>
+                </div>
+                <button class="btn" onclick="spin()" id="spinBtn">Try My Luck</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
