@@ -166,6 +166,5 @@
         limitSpins(element, limit);
     };
     
-    createWheel()
-    // createWheel({ dataArr: [0,0,0,0,0,0],radius:180, container: {width: 300, display: false, displayPointer:true, backgroundColor: 'gray'}, buttonBgColor: 'yellow', buttonTextColor:"red", pointerDegrees: 0, allowCustomInputs: false})
+    createWheel({ allowCustomInputs: true })
 })()
