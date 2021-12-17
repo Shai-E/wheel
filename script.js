@@ -68,6 +68,7 @@
             terms.addEventListener("click", (e) => {
                 const {target: {checked}} = e;
                 !checked ? mainContainerBtn.setAttribute("disabled", true) : mainContainerBtn.removeAttribute("disabled");
+                !checked ? mainContainerBtn.classList.add("disabled") : mainContainerBtn.classList.remove("disabled");
             })
         }
     
@@ -166,5 +167,5 @@
         limitSpins(element, limit);
     };
     
-    createWheel({ allowCustomInputs: true })
+    createWheel({ allowCustomInputs: true, maxSpins: 3 })
 })()

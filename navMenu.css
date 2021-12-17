@@ -1,0 +1,34 @@
+.config-menu {
+    position: fixed;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;;
+    transition: margin .5s ease-in-out;
+    z-index: 998;
+    height: 100%;
+}
+.config-menu::before {
+    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
+    filter: blur(10px);
+}
+
+.checkbox-label {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    z-index: 999;;
+}
+
+#config-menu-checkbox {
+    display:none;
+}
+
+#config-menu-checkbox ~ .config-menu {
+    margin: 0 -300px 0 -300px;
+}
+
+#config-menu-checkbox:checked ~ .config-menu {
+    display: flex;
+    margin: 0 0 0 0;
+}
