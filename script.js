@@ -48,7 +48,7 @@
     }
     
     const createContainer = ({  container: { displayPointer, display, borderRadius, width, backgroundColor, isCheckboxRequired}, 
-                                radius, buttonBgColor, buttonTextColor, buttonText, pointerDegrees, allowCustomInputs, maxSpins, userPickedButtonText }) => {
+                                radius, buttonBgColor, buttonTextColor, buttonText, pointerDegrees, allowCustomInputs, maxSpins, userPickedButtonText, customPointerImgUrl }) => {
         const mainContainer = document.querySelector(".main-container");
         const pointerContainer = document.querySelector('.pointer-container');
         const pointer = document.querySelector('.pointer');
@@ -56,7 +56,9 @@
         const inner = document.querySelector(".inner");
         const mainContainerBtn = document.querySelector(".btn");
         const inputs = document.querySelector("#inputs");
-    
+
+
+        pointer.src = customPointerImgUrl;
         const initDisplayPointer = (() => {
             pointerContainer.style.display = displayPointer ? "flex" : "none";
             pointerContainer.style.setProperty("--pointerDegrees", pointerDegrees);
@@ -70,39 +72,39 @@
             mainContainer.style.setProperty("--borderRadius", display ? borderRadius : radius);
             mainContainer.style.setProperty("--backgroundColor", backgroundColor);
         })();
-        // if()
-        if(!display) {
-            inner.innerHTML = userPickedButtonText || "spin";
-            inner.onclick = ()=>spin(inner, maxSpins);
-            inner.style.setProperty("--setCursor", "pointer")
-        } else if (isCheckboxRequired) {
-            const terms = document.querySelector("#terms");
-            const mainContainerBtn = document.querySelector(".btn");
-            mainContainerBtn.setAttribute("disabled", true);
-            const handleBtnDisablePropOnTermsStateChange = (() => {
-                terms.addEventListener("click", (e) => {
-                    const {target: {checked}} = e;
-                    const disableSpin = () => {
-                        mainContainerBtn.setAttribute("disabled", true);
-                        mainContainerBtn.classList.add("disabled");
-                    };
-                    const enableSpin = () => {
-                        mainContainerBtn.removeAttribute("disabled");
-                        mainContainerBtn.classList.remove("disabled");
-                    }
-                    checked ? enableSpin() : disableSpin();
-                })
-            })();
-        }
-    
         const initMainContainerBtn = (() => {
             mainContainerBtn.style.setProperty("--btnBackgroundColor", buttonBgColor);
             mainContainerBtn.style.setProperty("--btnTextColor", buttonTextColor);
         })();
-
+        
         const initInputsDisplay = (()=>{
             inputs.style.display = allowCustomInputs ? "flex" : "none";
         })()
+        if(!display) {
+            inner.innerHTML = userPickedButtonText || "spin";
+            inner.onclick = ()=>spin(inner, maxSpins);
+            inner.style.setProperty("--setCursor", "pointer")
+        } else {
+            
+            const disableSpin = () => {
+                mainContainerBtn.setAttribute("disabled", true);
+                mainContainerBtn.classList.add("disabled");
+            };
+            const enableSpin = () => {
+                mainContainerBtn.removeAttribute("disabled");
+                mainContainerBtn.classList.remove("disabled");
+            }
+            if (isCheckboxRequired) {
+                const terms = document.querySelector("#terms");
+                const handleBtnDisablePropOnTermsStateChange = (() => {
+                    terms.checked === false && disableSpin();
+                    terms.addEventListener("click", (e) => {
+                        const {target: {checked}} = e;
+                        checked ? enableSpin() : disableSpin();
+                    })
+                })();
+            }
+        } 
     
     }
     

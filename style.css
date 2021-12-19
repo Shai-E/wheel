@@ -62,6 +62,7 @@
     --btnTextColor: #fff;
     background-color: var(--btnBackgroundColor);
     color: var(--btnTextColor);
+    border: 2px solid transparent;
 }
 
 .d-flex-row {
@@ -179,9 +180,9 @@ html, body{
 
 .disabled {
     background-color: #cecece!important;
-    color: rgb(255, 255, 255);
-    border: 2px solid white;
-    cursor: default;
+    color: rgb(255, 255, 255)!important;
+    border: 2px solid white!important;
+    cursor: default!important;
 }
 
 .info {
