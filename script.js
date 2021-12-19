@@ -19,7 +19,7 @@
             fontSize: 16,
             borderRadius: 25,
             displayPointer: true,
-            checkboxRequired: true,
+            isCheckboxRequired: true,
         },
         radius: 200,
         dataArr: ["Almost!", "SEO Audit", "Sorry, try again!", "Kickstart Money Course", "Next time!", "Content Audit", "So close!", "SEO Call With My Team"],
@@ -28,6 +28,7 @@
         buttonTextColor: "#fff",
         allowCustomInputs: false,
         pointerDegrees: 45,
+        customPointerImgUrl: "./pointer3.png"
     }
     
     const setColor = (i ,cc) => {
@@ -46,45 +47,68 @@
         }
     }
     
-    const createContainer = ({container:{displayPointer, display, borderRadius, width, backgroundColor, checkboxRequired}, radius, buttonBgColor, buttonTextColor, pointerDegrees, allowCustomInputs, maxSpins}) => {
-        const pointerContainer = document.querySelector('.pointer-container');
-        const formContainer = document.querySelector('.form-container');
+    const createContainer = ({  container: { displayPointer, display, borderRadius, width, backgroundColor, isCheckboxRequired}, 
+                                radius, buttonBgColor, buttonTextColor, buttonText, pointerDegrees, allowCustomInputs, maxSpins, userPickedButtonText }) => {
         const mainContainer = document.querySelector(".main-container");
-    
-        pointerContainer.style.display = displayPointer ? "flex" : "none";
-        pointerContainer.style.setProperty("--pointerDegrees", pointerDegrees)
-        formContainer.style.display = display ? "flex" : "none";
-        mainContainer.style.setProperty("--width", display ? width : 0);
-        mainContainer.style.setProperty("--borderRadius", display ? borderRadius : radius);
-        formContainer.style.setProperty("--width", width);
+        const pointerContainer = document.querySelector('.pointer-container');
+        const pointer = document.querySelector('.pointer');
+        const formContainer = document.querySelector('.form-container');
         const inner = document.querySelector(".inner");
+        const mainContainerBtn = document.querySelector(".btn");
+        const inputs = document.querySelector("#inputs");
+    
+        const initDisplayPointer = (() => {
+            pointerContainer.style.display = displayPointer ? "flex" : "none";
+            pointerContainer.style.setProperty("--pointerDegrees", pointerDegrees);
+        })();
+        const initDisplayForm = (() => {
+            formContainer.style.display = display ? "flex" : "none";
+            formContainer.style.setProperty("--width", width);
+        })();
+        const initMainContainer = (() => {
+            mainContainer.style.setProperty("--width", display ? width : 0);
+            mainContainer.style.setProperty("--borderRadius", display ? borderRadius : radius);
+            mainContainer.style.setProperty("--backgroundColor", backgroundColor);
+        })();
+        // if()
         if(!display) {
-            inner.innerHTML = "spin";
-            inner.onclick = ()=>spin(inner, maxSpins)
-        } else if (checkboxRequired) {
+            inner.innerHTML = userPickedButtonText || "spin";
+            inner.onclick = ()=>spin(inner, maxSpins);
+            inner.style.setProperty("--setCursor", "pointer")
+        } else if (isCheckboxRequired) {
             const terms = document.querySelector("#terms");
             const mainContainerBtn = document.querySelector(".btn");
             mainContainerBtn.setAttribute("disabled", true);
-            terms.addEventListener("click", (e) => {
-                const {target: {checked}} = e;
-                !checked ? mainContainerBtn.setAttribute("disabled", true) : mainContainerBtn.removeAttribute("disabled");
-                !checked ? mainContainerBtn.classList.add("disabled") : mainContainerBtn.classList.remove("disabled");
-            })
+            const handleBtnDisablePropOnTermsStateChange = (() => {
+                terms.addEventListener("click", (e) => {
+                    const {target: {checked}} = e;
+                    const disableSpin = () => {
+                        mainContainerBtn.setAttribute("disabled", true);
+                        mainContainerBtn.classList.add("disabled");
+                    };
+                    const enableSpin = () => {
+                        mainContainerBtn.removeAttribute("disabled");
+                        mainContainerBtn.classList.remove("disabled");
+                    }
+                    checked ? enableSpin() : disableSpin();
+                })
+            })();
         }
     
-        
-        mainContainer.style.setProperty("--backgroundColor", backgroundColor);
-        const mainContainerBtn = document.querySelector(".btn");
-        mainContainerBtn.style.setProperty("--btnBackgroundColor", buttonBgColor);
-        mainContainerBtn.style.setProperty("--btnTextColor", buttonTextColor);
-        const inputs = document.querySelector("#inputs");
-        inputs.style.display = allowCustomInputs ? "flex" : "none";
+        const initMainContainerBtn = (() => {
+            mainContainerBtn.style.setProperty("--btnBackgroundColor", buttonBgColor);
+            mainContainerBtn.style.setProperty("--btnTextColor", buttonTextColor);
+        })();
+
+        const initInputsDisplay = (()=>{
+            inputs.style.display = allowCustomInputs ? "flex" : "none";
+        })()
     
     }
     
     const createWheelSlice = (i, radius, dataArr, customColorsArr) => {
         context.fillStyle = setColor(i, customColorsArr);
-            context.strokeStyle = i%2===0?"black":"white";
+            context.strokeStyle = i%2===0?"black":"black";
             const portion = (Math.PI*2)/dataArr.length;
             context.beginPath();
             context.moveTo(radius, radius);
@@ -110,7 +134,7 @@
     }
     
     const createWheel=(options)=>{
-        let formattedOptions = {...initOptions, ...options,container:{ ...initOptions.container, ...options?.container }}
+        let formattedOptions = {...initOptions, ...options,container:{ ...initOptions.container, ...options?.container }, userPickedButtonText: options?.buttonText};
         localStorage.setItem("wheel-preferences",JSON.stringify(formattedOptions))
         createContainer( formattedOptions )
         document.querySelector("#spinBtn").innerHTML = formattedOptions.buttonText;
@@ -167,5 +191,5 @@
         limitSpins(element, limit);
     };
     
-    createWheel({ allowCustomInputs: true, maxSpins: 3 })
+    createWheel({ allowCustomInputs: true, maxSpins: 3, container: {display: true} })
 })()
