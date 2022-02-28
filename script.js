@@ -34,6 +34,7 @@
         allowConfigGui: false,
         pointerDegrees: 45,
         customPointerImgUrl: "./pointer3.png",
+        onSubmit: ()=>{},
     }
     
     const setColor = (i ,cc) => {
@@ -101,7 +102,7 @@
             };
             const enableSpin = () => {
                 mainContainerBtn.removeAttribute("disabled");
-                if(!document.querySelector("#config-menu-checkbox").checked && currOptions.container.displayCheckbox && numberOfSpins < currOptions.maxSpins){
+                if(!document.querySelector("#terms").checked && currOptions.container.displayCheckbox && numberOfSpins < currOptions.maxSpins && isEmailValid()){
 
                     mainContainerBtn.classList.remove("disabled");
                 }
@@ -157,8 +158,7 @@
         document.querySelector("#pointerPosition").value = currOptions.pointerDegrees;
 
         if(currOptions.allowConfigGui) {
-            //config-menu
-            //config-menu-label
+
             document.querySelector("#config-menu").style.display = 'flex';
             document.querySelector("#config-menu-label").style.display = 'flex';
             
@@ -166,9 +166,6 @@
             document.querySelector("#config-menu").style.display = 'none';
             document.querySelector("#config-menu-label").style.display = 'none';
         }
-        // if (document.querySelector("#terms")) {
-        //     document.querySelector(".wheelapp.btn").classList.add("disabled")
-        // }
 
         if(currOptions.container.displayCheckbox) {
             document.querySelector("#termsText").innerHTML = currOptions.container.termsText;
@@ -178,9 +175,6 @@
         }
         document.querySelectorAll(".ifContainer").forEach(i => i.style.display = currOptions.container.display ? 'table-row' : 'none')
         document.querySelectorAll(".ifTerms").forEach(i => i.style.display = currOptions.container.displayCheckbox && currOptions.container.display ? 'table-row' : 'none')
-
-
-        //isTermsCheckboxRequired
     
         const { radius, container: {display, displayCheckbox}, maxSpins, dataArr, customColorsArr } = currOptions;
         const mainContainer = document.querySelector(".main-container");
@@ -247,6 +241,28 @@
         createWheel({...options, container: {...options.container, termsText: value}});
     });
 
+    const changeBtnDisabledStatusByValidityOfInputs = () => {
+        if(!isEmailValid()) {
+            document.querySelector(".btn").classList.add("disabled");
+        }else if(document.querySelector("#terms").checked && currOptions.container.displayCheckbox && numberOfSpins < currOptions.maxSpins){
+         document.querySelector(".btn").classList.remove("disabled");
+        } 
+    }
+
+    document.querySelector("#email")?.addEventListener("keyup", (e)=>{
+        changeBtnDisabledStatusByValidityOfInputs()
+    });
+
+    document.querySelector("#terms")?.addEventListener("change", (e)=>{
+        const checked = e.target.checked
+        if(checked){
+            changeBtnDisabledStatusByValidityOfInputs();
+        } else {
+            document.querySelector(".btn").classList.add("disabled");
+        }
+
+    });
+
     document.querySelector(".config-menu-backdrop")?.addEventListener("click", (e)=>{
         document.querySelector("#config-menu-checkbox").checked = false;
     });
@@ -264,19 +280,29 @@
     const unlimitWheel = (element, limit, shouldLimit)=> {
         element.onclick = ()=>spin(element, limit, shouldLimit);
         numberOfSpins = 0;
-        if(shouldLimit) element.classList.remove("disabled");
+        if(shouldLimit && isEmailValid()) element.classList.remove("disabled");
     }
     const increaseNumberOfSpins = () => {
         numberOfSpins++;
     };
     
-    function spin (element ,limit, shouldLimit) {
+    function isEmailValid (value) {
+        const emailValidationPattern = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
+        const email = document.querySelector("#email").value;
+        return emailValidationPattern.test(value || email);
+    }
+    const spin = (element ,limit, shouldLimit) => {
+        if(!isEmailValid() && currOptions.container.display) {
+            return;
+        };
         increaseNumberOfSpins();
         const rand = spinTaps+randNumOfSpins();
         document.querySelector(".spinning").style.setProperty("--random", rand);
         spinTaps=rand;
         limitSpins(element, limit, shouldLimit);
+        currOptions.onSubmit();
     };
+
     
     createWheel({ allowConfigGui: true });
 

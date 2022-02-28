@@ -51,6 +51,10 @@
     
 }
 
+.wheelapp #config-menu-label {
+    cursor: pointer;
+}
+
 .wheelapp .config-menu::before {
     box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
     filter: blur(10px);
