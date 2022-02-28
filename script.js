@@ -19,16 +19,20 @@
             fontSize: 16,
             borderRadius: 25,
             displayPointer: true,
-            isCheckboxRequired: true,
+            displayCheckbox: true,
+            formTitle: "Spin to Win!",
+            formSubTitle: "Enter your email for the chance to win!",
+            termsText: "I agree to receive an email that'll allow me to claim my prize and helpful email series from BloggersIdeas.com", 
         },
         radius: 200,
         dataArr: ["Almost!", "SEO Audit", "Sorry, try again!", "Kickstart Money Course", "Next time!", "Content Audit", "So close!", "SEO Call With My Team"],
         buttonText: "Try My Luck",
         buttonBgColor: "#53B753",
         buttonTextColor: "#fff",
-        allowCustomInputs: false,
+        allowCustomInputs: true,
+        allowConfigGui: false,
         pointerDegrees: 45,
-        customPointerImgUrl: "./pointer3.png"
+        customPointerImgUrl: "./pointer3.png",
     }
     
     const setColor = (i ,cc) => {
@@ -47,8 +51,8 @@
         }
     }
     
-    const createContainer = ({  container: { displayPointer, display, borderRadius, width, backgroundColor, isCheckboxRequired}, 
-                                radius, buttonBgColor, buttonTextColor, buttonText, pointerDegrees, allowCustomInputs, maxSpins, userPickedButtonText, customPointerImgUrl }) => {
+    const createContainer = ({  container: { displayPointer, display, borderRadius, width, backgroundColor, displayCheckbox}, 
+                                radius, buttonBgColor, buttonTextColor, buttonText, pointerDegrees, allowCustomInputs, maxSpins, customPointerImgUrl }) => {
         const mainContainer = document.querySelector(".main-container");
         const pointerContainer = document.querySelector('.pointer-container');
         const pointer = document.querySelector('.pointer');
@@ -81,11 +85,15 @@
             inputs.style.display = allowCustomInputs ? "flex" : "none";
         })()
         if(!display) {
-            inner.innerHTML = userPickedButtonText || "spin";
-            inner.onclick = ()=>spin(inner, maxSpins);
+            inner.innerHTML = buttonText;
+            inner.onclick = ()=>spin(inner, maxSpins, displayCheckbox);
             inner.style.setProperty("--setCursor", "pointer")
         } else {
-            
+            inner.innerHTML ="";
+            inner.onclick = null;
+            inner.style.setProperty("--setCursor", "default")
+            inner.classList.remove("disabled");
+
             const disableSpin = () => {
                 mainContainerBtn.setAttribute("disabled", true);
                 mainContainerBtn.classList.add("disabled");
@@ -94,7 +102,7 @@
                 mainContainerBtn.removeAttribute("disabled");
                 mainContainerBtn.classList.remove("disabled");
             }
-            if (isCheckboxRequired) {
+            if (displayCheckbox) {
                 const terms = document.querySelector("#terms");
                 const handleBtnDisablePropOnTermsStateChange = (() => {
                     terms.checked === false && disableSpin();
@@ -136,12 +144,35 @@
     }
     
     const createWheel=(options)=>{
-        let formattedOptions = {...initOptions, ...options,container:{ ...initOptions.container, ...options?.container }, userPickedButtonText: options?.buttonText};
+        let formattedOptions = {...initOptions, ...options, container:{ ...initOptions.container, ...options?.container }};
         localStorage.setItem("wheel-preferences",JSON.stringify(formattedOptions))
         createContainer( formattedOptions )
         document.querySelector("#spinBtn").innerHTML = formattedOptions.buttonText;
+        document.querySelector("#formTitle").innerHTML = formattedOptions.container.formTitle;
+        document.querySelector("#formSubTitle").innerHTML = formattedOptions.container.formSubTitle;
+        document.querySelector("#pointerPosition").value = formattedOptions.pointerDegrees;
+
+        if(formattedOptions.allowConfigGui) {
+            //config-menu
+            //config-menu-label
+            document.querySelector("#config-menu").style.display = 'flex';
+            document.querySelector("#config-menu-label").style.display = 'flex';
+            
+        } else {
+            document.querySelector("#config-menu").style.display = 'none';
+            document.querySelector("#config-menu-label").style.display = 'none';
+        }
+
+        if(formattedOptions.container.displayCheckbox) {
+            document.querySelector("#termsText").innerHTML = formattedOptions.container.termsText;
+            document.querySelector("#termsContainer").style.display = 'flex';
+        } else {
+            document.querySelector("#termsContainer").style.display = 'none';
+        }
+
+        //isTermsCheckboxRequired
     
-        const { radius, container: {display}, maxSpins, dataArr, customColorsArr } = formattedOptions;
+        const { radius, container: {display, displayCheckbox}, maxSpins, dataArr, customColorsArr } = formattedOptions;
         const mainContainer = document.querySelector(".main-container");
         const wheelContainer = document.querySelector(".wheel-container");
         const canvasContainer = document.querySelector(".canvas-container");
@@ -157,7 +188,7 @@
         context.clearRect(0,0,radius*2, radius*2);
         document.querySelector(".info").innerHTML = "";
         const btn = document.querySelector(".btn");
-        unlimitWheel(display ? btn : inner, maxSpins);
+        unlimitWheel(display ? btn : inner, maxSpins, displayCheckbox);
         dataArr.forEach((_dataItem, i)=>createWheelSlice(i, radius, dataArr, customColorsArr))
     }
     
@@ -166,18 +197,57 @@
         const options = JSON.parse(localStorage.getItem("wheel-preferences"));
         createWheel({...options, dataArr: arr});
     });
+
+    document.querySelector("#useContainer")?.addEventListener("click", (e)=>{
+        const checked = e.target.checked
+        const options = JSON.parse(localStorage.getItem("wheel-preferences"));
+        createWheel({...options, container: {...options.container, display: checked}});
+    });
+
+    document.querySelector("#formTitleInput")?.addEventListener("keyup", (e)=>{
+        const title = e.target.value
+        const options = JSON.parse(localStorage.getItem("wheel-preferences"));
+        createWheel({...options, container: {...options.container, formTitle: title}});
+    });
+
+    document.querySelector("#formSubTitleInput")?.addEventListener("keyup", (e)=>{
+        const subTitle = e.target.value
+        const options = JSON.parse(localStorage.getItem("wheel-preferences"));
+        createWheel({...options, container: {...options.container, formSubTitle: subTitle}});
+    });
+
+    document.querySelector("#pointerPosition")?.addEventListener("input", (e)=>{
+        const pointerPosition = e.target.value
+        const options = JSON.parse(localStorage.getItem("wheel-preferences"));
+        createWheel({...options, pointerDegrees: pointerPosition});
+    });
+
+    document.querySelector("#isTermsCheckboxRequired")?.addEventListener("click", (e)=>{
+        const checked = e.target.checked
+        const options = JSON.parse(localStorage.getItem("wheel-preferences"));
+        createWheel({...options, container: {...options.container, displayCheckbox: checked}});
+    });
+
+    document.querySelector("#termsTextInput")?.addEventListener("keyup", (e)=>{
+        const value = e.target.value
+        const options = JSON.parse(localStorage.getItem("wheel-preferences"));
+        createWheel({...options, container: {...options.container, termsText: value}});
+    });
+
+    //termsText
     
     let spinTaps = 0;
     const randNumOfSpins = () => Math.floor(Math.random()*10000);
     
-    const limitSpins=(element, limitNumberOfSpins) =>{
+    const limitSpins=(element, limitNumberOfSpins, shouldLimit) =>{
+        if (!shouldLimit) return;
         if(numberOfSpins>=limitNumberOfSpins){
             element.onclick = "";
             element.classList.toggle("disabled");
         }
     };
-    const unlimitWheel = (element, limit)=> {
-        element.onclick = ()=>spin(element, limit);
+    const unlimitWheel = (element, limit, shouldLimit)=> {
+        element.onclick = ()=>spin(element, limit, shouldLimit);
         element.classList.remove("disabled");
         numberOfSpins = 0;
     }
@@ -185,13 +255,13 @@
         numberOfSpins++;
     };
     
-    function spin (element ,limit) {
+    function spin (element ,limit, shouldLimit) {
         increaseNumberOfSpins();
         const rand = spinTaps+randNumOfSpins();
         document.querySelector(".spinning").style.setProperty("--random", rand);
         spinTaps=rand;
-        limitSpins(element, limit);
+        limitSpins(element, limit, shouldLimit);
     };
     
-    createWheel({ allowCustomInputs: true, maxSpins: 3, container: {display: true} })
+    createWheel({ allowConfigGui: true })
 })()

@@ -1,34 +1,61 @@
-.config-menu {
+.wheelapp .config-menu {
     position: fixed;
-    top: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
     background-color: #fff;;
     transition: margin .5s ease-in-out;
     z-index: 998;
-    height: 100%;
+    height: 50%;
+    width: 50%;
+    justify-content: center;
+    padding: 50px;
+    border-radius: 10px;
+    backdrop-filter: blur(50%);
+    backdrop-filter: blur(5px) saturate(200%);
+    -webkit-backdrop-filter: blur(5px) saturate(200%);
+    background-color: rgba(255, 255, 255, 0.68);
+    border-radius: 12px;
+    border: 1px solid rgba(209, 213, 219, 0.3);
+    overflow: auto;
 }
-.config-menu::before {
+
+.wheelapp .config-menu::before {
     box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
     filter: blur(10px);
 }
 
-.checkbox-label {
+.wheelapp .checkbox-label {
     position: fixed;
     top: 0;
     left: 50%;
-    z-index: 999;;
+    z-index: 999;
+    transform: translateX(-50%);
 }
 
-#config-menu-checkbox {
+.wheelapp #config-menu-checkbox {
     display:none;
 }
 
-#config-menu-checkbox ~ .config-menu {
-    margin: 0 -300px 0 -300px;
+.wheelapp #config-menu-checkbox ~ .config-menu {
+    margin: 0 -100% 0 -100%;
 }
 
-#config-menu-checkbox:checked ~ .config-menu {
+.wheelapp #config-menu-checkbox:checked ~ .config-menu {
     display: flex;
     margin: 0 0 0 0;
+}
+
+.wheelapp #inputs {
+    resize: none;
+    padding: 10px 30px;
+    backdrop-filter: blur(50%);
+    backdrop-filter: blur(5px) saturate(200%);
+    -webkit-backdrop-filter: blur(5px) saturate(200%);
+    background-color: rgba(255, 255, 255, 0.68);
+    border-radius: 12px;
+    border: 1px solid rgba(209, 213, 219, 0.3);
+    height: 100px;
 }

@@ -10,13 +10,65 @@
     <script src="./script.js" defer></script>
 </head>
 <body>
-    <div class="app">
-        <input type="checkbox" name="" id="config-menu-checkbox" checked="true">
-        <label for="config-menu-checkbox" class="checkbox-label">
+    <div class="wheelapp">
+        <input type="checkbox" name="" id="config-menu-checkbox" checked >
+        <label for="config-menu-checkbox" class="checkbox-label" id="config-menu-label">
             ☰
         </label>
-        <div class="config-menu">
-            <textarea name="" cols="30" rows="10" id="inputs"></textarea>
+        <div class="config-menu" id="config-menu">
+            <h1>Settings</h1>
+            <h5>Write your own content, each option in a separate line</h5>
+            <textarea name="" cols="30" rows="8" id="inputs"></textarea>
+            <table>
+                <tr>
+                    <td>
+                        <label for="useContainer">Container: </label>
+                    </td>
+                    <td>
+                        <input type="checkbox" name="useContainer" id="useContainer" checked/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="formTitleInput">Form Title: </label>
+                    </td>
+                    <td>
+                        <input type="text" name="formTitleInput" id="formTitleInput"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="formSubTitleInput">Form Sub Title: </label>
+                    </td>
+                    <td>
+                        <input type="text" name="formSubTitleInput" id="formSubTitleInput"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="pointerPosition">Pointer Position: </label>
+                    </td>
+                    <td>
+                        <input type="range" name="pointerPosition" id="pointerPosition" min="0" max="360"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="isTermsCheckboxRequired">Display Terms: </label>
+                    </td>
+                    <td>
+                        <input type="checkbox" name="isTermsCheckboxRequired" id="isTermsCheckboxRequired" checked/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="termsTextInput">Terms Text: </label>
+                    </td>
+                    <td>
+                        <input type="text" name="termsTextInput" id="termsTextInput"/>
+                    </td>
+                </tr>
+            </table>
         </div>
         <div class="main-container">
             <div class="wheel-container">
@@ -32,14 +84,13 @@
                 </div>
             </div>
             <div class="form-container">
-                <h1>Spin to Win!</h1>
-                <h3>Enter your email for the chance to win!</h3>
+                <h1 id="formTitle"></h1>
+                <h3 id="formSubTitle"></h3>
                 <input type="text" placeholder="Your Email"/>
-                <div class="d-flex-row">
+                <div class="d-flex-row" id="termsContainer">
                     <input type="checkbox" name="terms" id="terms">
-    
                     <label for="terms" class="terms-label">
-                        <p>I agree to receive an email that'll allow me to claim my prize and helpful email series from BloggersIdeas.com</p>
+                        <p id="termsText"></p>
                     </label>
                 </div>
                 <button class="btn" onclick="spin()" id="spinBtn">Try My Luck</button>
