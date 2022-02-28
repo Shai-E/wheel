@@ -194,7 +194,7 @@
         const btn = document.querySelector(".btn");
         unlimitWheel(display ? btn : inner, maxSpins, displayCheckbox);
         dataArr.forEach((_dataItem, i)=>createWheelSlice(i, radius, dataArr, customColorsArr))
-        if(!document.querySelector("#terms").checked && currOptions.container.displayCheckbox && numberOfSpins < currOptions.maxSpins) {
+        if(!document.querySelector("#terms").checked && currOptions.container.displayCheckbox && numberOfSpins < currOptions.maxSpins && currOptions.container.displayCheckbox) {
             document.querySelector(".btn").classList.add("disabled");
         }
     }
@@ -241,12 +241,9 @@
         createWheel({...options, container: {...options.container, termsText: value}});
     });
 
-    const changeBtnDisabledStatusByValidityOfInputs = () => {
-        if(!isEmailValid()) {
-            document.querySelector(".btn").classList.add("disabled");
-        }else if(document.querySelector("#terms").checked && currOptions.container.displayCheckbox && numberOfSpins < currOptions.maxSpins){
-         document.querySelector(".btn").classList.remove("disabled");
-        } 
+    const changeBtnDisabledStatusByValidityOfInputs = ( bool = true) => {
+        const shouldBeEnabled = ((document.querySelector("#terms").checked && currOptions.container.displayCheckbox) || !currOptions.container.displayCheckbox) && numberOfSpins < currOptions.maxSpins && (currOptions.container.display && isEmailValid()) && bool
+        !shouldBeEnabled ? document.querySelector(".btn").classList.add("disabled") : document.querySelector(".btn").classList.remove("disabled");
     }
 
     document.querySelector("#email")?.addEventListener("keyup", (e)=>{
@@ -254,13 +251,7 @@
     });
 
     document.querySelector("#terms")?.addEventListener("change", (e)=>{
-        const checked = e.target.checked
-        if(checked){
-            changeBtnDisabledStatusByValidityOfInputs();
-        } else {
-            document.querySelector(".btn").classList.add("disabled");
-        }
-
+        changeBtnDisabledStatusByValidityOfInputs(checked);
     });
 
     document.querySelector(".config-menu-backdrop")?.addEventListener("click", (e)=>{
