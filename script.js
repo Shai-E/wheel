@@ -200,9 +200,6 @@
         const btn = document.querySelector(".btn");
         unlimitWheel(display ? btn : inner, maxSpins, displayCheckbox);
         dataArr.forEach((_dataItem, i)=>createWheelSlice(i, radius, dataArr, customColorsArr))
-
-        console.log("hi");
-
         if(!document.querySelector("#terms").checked && currOptions.container.displayCheckbox && numberOfSpins < currOptions.maxSpins) {
             document.querySelector(".btn").classList.add("disabled");
         }
@@ -250,7 +247,7 @@
         createWheel({...options, container: {...options.container, termsText: value}});
     });
 
-    document.querySelector(".config-menu-actual-backdrop")?.addEventListener("click", (e)=>{
+    document.querySelector(".config-menu-backdrop")?.addEventListener("click", (e)=>{
         document.querySelector("#config-menu-checkbox").checked = false;
     });
     

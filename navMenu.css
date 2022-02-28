@@ -16,7 +16,7 @@
     overflow: auto;
 }
 
-.wheelapp .config-menu-actual-backdrop {
+.wheelapp .config-menu-backdrop {
     position: absolute;
     top: 0;
    height: 100%;
@@ -25,7 +25,7 @@
 
 }
 
-.wheelapp .config-menu-backdrop {
+.wheelapp .config-menu-content {
     display: flex;
     flex-direction: column;
     width: 50%;
@@ -44,7 +44,7 @@
 }
 
 @media only screen and (max-width: 700px) {
-    .wheelapp .config-menu-backdrop {
+    .wheelapp .config-menu-content {
         width: 100%;
         min-width: auto;
     }
@@ -89,7 +89,7 @@
     height: 100px;
 }
 
-.wheelapp .config-menu-backdrop {
+.wheelapp .config-menu-content {
     /* z-index: 0; */
     /* width: 100%; */
     /* height: 100%; */
