@@ -27,10 +27,26 @@
                 <table>
                     <tr>
                         <td>
+                            <label for="wheelRadius">Wheel Size: </label>
+                        </td>
+                        <td>
+                            <input type="range" name="wheelRadius" id="wheelRadius" min="150" max="400"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
                             <label for="useContainer">Container: </label>
                         </td>
                         <td>
                             <input type="checkbox" name="useContainer" id="useContainer" checked/>
+                        </td>
+                    </tr>
+                    <tr class="ifContainer">
+                        <td>
+                            <label for="containerWidth">Container Width: </label>
+                        </td>
+                        <td>
+                            <input type="range" name="containerWidth" id="containerWidth" min="300" max="500"/>
                         </td>
                     </tr>
                     <tr class="ifContainer">
@@ -73,6 +89,14 @@
                             <input type="range" name="pointerPosition" id="pointerPosition" min="0" max="360"/>
                         </td>
                     </tr>
+                    <!-- <tr>
+                        <td>
+                            <label for="customPointer">Pointer Position: </label>
+                        </td>
+                        <td>
+                            <input type="file" name="customPointer" id="customPointer" accept="image/png, image/jpeg" />
+                        </td>
+                    </tr> -->
                 </table>
             </div>
         </div>
@@ -99,7 +123,7 @@
                         <p id="termsText"></p>
                     </label>
                 </div>
-                <button class="btn"  id="spinBtn">Try My Luck</button>
+                <button class="btn"  id="containerBtn">Try My Luck</button>
             </div>
         </div>
     </div>

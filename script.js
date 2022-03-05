@@ -1,6 +1,16 @@
 (()=>{
     const canvas = document.querySelector("#myCanvas")
     const context = canvas.getContext('2d');
+    const mainContainer = document.querySelector(".main-container");
+    const pointerContainer = document.querySelector('.pointer-container');
+    const pointer = document.querySelector('.pointer');
+    const formContainer = document.querySelector('.form-container');
+    const inner = document.querySelector(".inner");
+    const mainContainerBtn = document.querySelector("#containerBtn");
+    const inputs = document.querySelector("#inputs");
+
+    let activeBtn = null;
+    let inactiveBtn = null;
     let numberOfSpins = 0;
     let currOptions = {}
     
@@ -11,7 +21,8 @@
     
     const initOptions = {
         customColorsArr: [],
-        maxSpins: 1,
+        maxSpins: 5,
+        displayPointer: true,
         container: {
             width: 300,
             display: true,
@@ -19,7 +30,6 @@
             textColor: "#fff",
             fontSize: 16,
             borderRadius: 25,
-            displayPointer: true,
             displayCheckbox: true,
             formTitle: "Spin to Win!",
             formSubTitle: "Enter your email for the chance to win!",
@@ -52,111 +62,99 @@
             }
         }
     }
+
+    const displayBtnText = (btnElement) => {
+        btnElement.innerHTML = currOptions.buttonText;
+
+    }
+
+    const removeBtnText = (btnElement) => {
+        btnElement.innerHTML = "";
+    }
+
+    const disableBtnElement = (btnElement) => {
+        btnElement.onclick = null;
+        btnElement.style.setProperty("--setCursor", "default")
+    }
     
-    const createContainer = ({  container: { displayPointer, display, borderRadius, width, backgroundColor, displayCheckbox}, 
-                                radius, buttonBgColor, buttonTextColor, buttonText, pointerDegrees, allowCustomInputs, maxSpins, customPointerImgUrl }) => {
-        const mainContainer = document.querySelector(".main-container");
-        const pointerContainer = document.querySelector('.pointer-container');
-        const pointer = document.querySelector('.pointer');
-        const formContainer = document.querySelector('.form-container');
-        const inner = document.querySelector(".inner");
-        const mainContainerBtn = document.querySelector(".btn");
-        const inputs = document.querySelector("#inputs");
+    const disabledStyle = (btnElement) => {
+        btnElement.classList.add("disabled");
+        btnElement.setAttribute("disabled", true);
+    }
 
-
-        pointer.src = customPointerImgUrl;
-        const initDisplayPointer = (() => {
-            pointerContainer.style.display = displayPointer ? "flex" : "none";
-            pointerContainer.style.setProperty("--pointerDegrees", pointerDegrees);
-        })();
-        const initDisplayForm = (() => {
-            formContainer.style.display = display ? "flex" : "none";
-            formContainer.style.setProperty("--width", width);
-        })();
-        const initMainContainer = (() => {
-            mainContainer.style.setProperty("--width", display ? width : 0);
-            mainContainer.style.setProperty("--borderRadius", display ? borderRadius : radius);
-            mainContainer.style.setProperty("--backgroundColor", backgroundColor);
-        })();
-        const initMainContainerBtn = (() => {
-            mainContainerBtn.style.setProperty("--btnBackgroundColor", buttonBgColor);
-            mainContainerBtn.style.setProperty("--btnTextColor", buttonTextColor);
-        })();
-        
-        const initInputsDisplay = (()=>{
-            inputs.style.display = allowCustomInputs ? "flex" : "none";
-        })()
-        if(!display) {
-            inner.innerHTML = buttonText;
-            inner.onclick = ()=>spin(inner, maxSpins, displayCheckbox);
-            inner.style.setProperty("--setCursor", "pointer")
+    const enabledStyle = (btnElement) => {
+        btnElement.removeAttribute("disabled");
+        btnElement.classList.remove("disabled");
+    }
+    
+    
+    const isTermsValid = () => {
+        const shouldDisplayTerms = currOptions.container.displayCheckbox;
+        const isTermsChecked = document.querySelector("#terms").checked;
+        return (shouldDisplayTerms && isTermsChecked) || !shouldDisplayTerms;
+    }
+    const isEmailValid = (value) => {
+        const emailValidationPattern = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
+        const email = document.querySelector("#email").value;
+        return emailValidationPattern.test(value || email) || !currOptions.container.display;
+    }
+    
+    const isNumberOfSpinsValid = (numberOfSpins) => {
+        return numberOfSpins < currOptions.maxSpins || !currOptions.maxSpins
+    }
+    
+    const enableBtnElement = () => {
+        // initActiveBtn()
+        displayBtnText(activeBtn);
+        if(isTermsValid() && isNumberOfSpinsValid(numberOfSpins) && isEmailValid()){
+            activeBtn.onclick = () => spin(activeBtn, currOptions.maxSpins, currOptions.container.displayCheckbox);
+            activeBtn.style.setProperty("--setCursor", "pointer");
+            enabledStyle(activeBtn);
         } else {
-            inner.innerHTML ="";
-            inner.onclick = null;
-            inner.style.setProperty("--setCursor", "default")
-            inner.classList.remove("disabled");
+            disableBtnElement(activeBtn);
+            disabledStyle(activeBtn)
+        }
+    }
 
-            const disableSpin = () => {
-                mainContainerBtn.setAttribute("disabled", true);
-                mainContainerBtn.classList.add("disabled");
-            };
-            const enableSpin = () => {
-                mainContainerBtn.removeAttribute("disabled");
-                if(!document.querySelector("#terms").checked && currOptions.container.displayCheckbox && numberOfSpins < currOptions.maxSpins && isEmailValid()){
+    const switchBtns = (btnToActivate, btnToDisable) => {
+        if (btnToActivate) enableBtnElement(btnToActivate);
+        if (btnToDisable) disableBtnElement(btnToDisable);
+    }
 
-                    mainContainerBtn.classList.remove("disabled");
-                }
-            }
-            if (displayCheckbox) {
-                const terms = document.querySelector("#terms");
-                const handleBtnDisablePropOnTermsStateChange = (() => {
-                    terms.checked === false && disableSpin();
-                    terms.addEventListener("click", (e) => {
-                        const {target: {checked}} = e;
-                        checked ? enableSpin() : disableSpin();
-                    })
-                })();
-            }
-        } 
-    
+    const initDisplayPointer = () => {
+        pointerContainer.style.display = currOptions.displayPointer ? "flex" : "none";
+        pointerContainer.style.setProperty("--pointerDegrees", currOptions.pointerDegrees);
+    };
+    const initDisplayForm = () => {
+        formContainer.style.display = currOptions.container.display ? "flex" : "none";
+        formContainer.style.setProperty("--width", currOptions.container.width);
+    }
+    const initMainContainer = () => {
+        mainContainer.style.setProperty("--width", currOptions.container.display ? currOptions.container.width : 0);
+        mainContainer.style.setProperty("--borderRadius", currOptions.container.display ? currOptions.container.borderRadius : currOptions.radius);
+        mainContainer.style.setProperty("--backgroundColor", currOptions.container.backgroundColor);
+    }
+    const initMainContainerBtn = () => {
+        mainContainerBtn.style.setProperty("--btnBackgroundColor", currOptions.buttonBgColor);
+        mainContainerBtn.style.setProperty("--btnTextColor", currOptions.buttonTextColor);
     }
     
-    const createWheelSlice = (i, radius, dataArr, customColorsArr) => {
-        context.fillStyle = setColor(i, customColorsArr);
-            context.strokeStyle = i%2===0?"black":"black";
-            const portion = (Math.PI*2)/dataArr.length;
-            context.beginPath();
-            context.moveTo(radius, radius);
-            context.stroke();
-            context.arc(radius,radius,radius,Math.PI/2+(i*portion), Math.PI/2+(i+1)*portion, false); 
-            context.fill();
-            
-            const div = document.createElement('div');
-            const span = document.createElement('span');
-            div.className = `text`;
-            span.className = `text-span`;
-            const degrees = 360/dataArr.length;
-            div.style.setProperty("--portion", degrees);
-            div.style.setProperty("--half", dataArr.length%2===0?degrees/2:degrees);
-            div.style.setProperty("--rotation", i);
-            div.style.setProperty("--radius", radius);
-            span.innerHTML = dataArr[i];
-            span.style.setProperty("--radius", radius);
-            div.append(span);
-            const info = document.querySelector(".info")
-            info.style.setProperty("--radius", radius);
-            info.append(div);
+    const initInputsDisplay = ()=>{
+        inputs.style.display = currOptions.allowCustomInputs ? "flex" : "none";
     }
-    
-    const createWheel=(options)=>{
-        currOptions = {...initOptions, ...options, container:{ ...initOptions.container, ...options?.container }};
-        localStorage.setItem("wheel-preferences",JSON.stringify(currOptions))
-        createContainer( currOptions )
-        document.querySelector("#spinBtn").innerHTML = currOptions.buttonText;
+
+    const initSettingsGui = () => {
+        mainContainerBtn.innerHTML = currOptions.buttonText;
         document.querySelector("#formTitle").innerHTML = currOptions.container.formTitle;
         document.querySelector("#formSubTitle").innerHTML = currOptions.container.formSubTitle;
         document.querySelector("#pointerPosition").value = currOptions.pointerDegrees;
+        document.querySelector("#containerWidth").value = currOptions.container.width;
+        document.querySelector("#wheelRadius").value = currOptions.radius;
+        document.querySelectorAll(".ifContainer").forEach(i => i.style.display = currOptions.container.display ? 'table-row' : 'none')
+        document.querySelectorAll(".ifTerms").forEach(i => i.style.display = currOptions.container.displayCheckbox && currOptions.container.display ? 'table-row' : 'none')
+    }
 
+    const initGuiDisplay = () => {
         if(currOptions.allowConfigGui) {
 
             document.querySelector("#config-menu").style.display = 'flex';
@@ -166,16 +164,81 @@
             document.querySelector("#config-menu").style.display = 'none';
             document.querySelector("#config-menu-label").style.display = 'none';
         }
+    }
 
+    const initDisplayTerms = () => {
         if(currOptions.container.displayCheckbox) {
             document.querySelector("#termsText").innerHTML = currOptions.container.termsText;
             document.querySelector("#termsContainer").style.display = 'flex';
         } else {
             document.querySelector("#termsContainer").style.display = 'none';
         }
-        document.querySelectorAll(".ifContainer").forEach(i => i.style.display = currOptions.container.display ? 'table-row' : 'none')
-        document.querySelectorAll(".ifTerms").forEach(i => i.style.display = currOptions.container.displayCheckbox && currOptions.container.display ? 'table-row' : 'none')
+    }
+
+    const resetInactiveBtn = (inactiveBtn) =>{
+        disableBtnElement(inactiveBtn);
+        enabledStyle(inactiveBtn);
+    }
+
+    const initActiveBtn = () => {
+        activeBtn = currOptions.container.display ? mainContainerBtn : inner;
+        inactiveBtn = !currOptions.container.display ? mainContainerBtn : inner;
+        enableBtnElement(activeBtn);
+        disableBtnElement(inactiveBtn)
+        resetInactiveBtn(inactiveBtn);
+        removeBtnText(inactiveBtn);
+    }
+
+
+    const executeFunctions = (functionArr) => {
+        functionArr.forEach(func => func())
+    }
+
+    const initWheelOptions = () => {
+        pointer.src = currOptions.customPointerImgUrl;
+        executeFunctions([initDisplayPointer, initDisplayForm, initMainContainer, initMainContainerBtn, initInputsDisplay, initSettingsGui, initDisplayTerms, initActiveBtn, initGuiDisplay])
+    }
+
     
+        
+    
+    const createWheelSlice = (i, radius, dataArr, customColorsArr) => {
+        context.fillStyle = setColor(i, customColorsArr);
+        context.strokeStyle = i%2===0?"black":"black";
+        const portion = (Math.PI*2)/dataArr.length;
+        context.beginPath();
+        context.moveTo(radius, radius);
+        context.stroke();
+        context.arc(radius,radius,radius,Math.PI/2+(i*portion), Math.PI/2+(i+1)*portion, false); 
+        context.fill();
+        
+        const div = document.createElement('div');
+        const span = document.createElement('span');
+        div.className = `text`;
+        span.className = `text-span`;
+        const degrees = 360/dataArr.length;
+        div.style.setProperty("--portion", degrees);
+        div.style.setProperty("--half", dataArr.length%2===0?degrees/2:degrees);
+        div.style.setProperty("--rotation", i);
+        div.style.setProperty("--radius", radius);
+        span.innerHTML = dataArr[i];
+        span.style.setProperty("--radius", radius);
+        div.append(span);
+        const info = document.querySelector(".info")
+        info.style.setProperty("--radius", radius);
+        info.append(div);
+    }
+
+    const saveUserOptionsToLocalStorage = () => {
+        localStorage.setItem("wheel-preferences",JSON.stringify(currOptions))
+    }
+
+
+    
+    const createWheel=(options)=>{
+        currOptions = {...initOptions, ...options, container:{ ...initOptions.container, ...options?.container }};
+        saveUserOptionsToLocalStorage();
+        initWheelOptions();
         const { radius, container: {display, displayCheckbox}, maxSpins, dataArr, customColorsArr } = currOptions;
         const mainContainer = document.querySelector(".main-container");
         const wheelContainer = document.querySelector(".wheel-container");
@@ -192,15 +255,13 @@
         context.clearRect(0,0,radius*2, radius*2);
         document.querySelector(".info").innerHTML = "";
         const btn = document.querySelector(".btn");
-        unlimitWheel(display ? btn : inner, maxSpins, displayCheckbox);
-        dataArr.forEach((_dataItem, i)=>createWheelSlice(i, radius, dataArr, customColorsArr))
-        if(!document.querySelector("#terms").checked && currOptions.container.displayCheckbox && numberOfSpins < currOptions.maxSpins && currOptions.container.displayCheckbox) {
-            document.querySelector(".btn").classList.add("disabled");
-        }
+        unlimitWheel();
+        dataArr.forEach((_dataItem, i)=>createWheelSlice(i, radius, dataArr, customColorsArr));
+
     }
     
     document.querySelector("#inputs")?.addEventListener("keyup", (e)=>{
-        const arr = e.target.value.split("\n");
+        const arr = e.target.value.split("\n").filter(i=>i!=false);
         const options = JSON.parse(localStorage.getItem("wheel-preferences"));
         createWheel({...options, dataArr: arr});
     });
@@ -229,6 +290,16 @@
         createWheel({...options, pointerDegrees: pointerPosition});
     });
 
+    document.querySelector("#wheelRadius")?.addEventListener("input", (e)=>{
+        const radius = e.target.value
+        const options = JSON.parse(localStorage.getItem("wheel-preferences"));
+        createWheel({...options, radius: radius});
+    });
+    document.querySelector("#containerWidth")?.addEventListener("input", (e)=>{
+        const width = e.target.value
+        const options = JSON.parse(localStorage.getItem("wheel-preferences"));
+        createWheel({...options, container: {...options.container, width}});
+    });
     document.querySelector("#isTermsCheckboxRequired")?.addEventListener("click", (e)=>{
         const checked = e.target.checked
         const options = JSON.parse(localStorage.getItem("wheel-preferences"));
@@ -242,8 +313,10 @@
     });
 
     const changeBtnDisabledStatusByValidityOfInputs = ( bool = true) => {
-        const shouldBeEnabled = ((document.querySelector("#terms").checked && currOptions.container.displayCheckbox) || !currOptions.container.displayCheckbox) && numberOfSpins < currOptions.maxSpins && (currOptions.container.display && isEmailValid()) && bool
-        !shouldBeEnabled ? document.querySelector(".btn").classList.add("disabled") : document.querySelector(".btn").classList.remove("disabled");
+        // const shouldBeEnabled = ((document.querySelector("#terms").checked && currOptions.container.displayCheckbox) || !currOptions.container.displayCheckbox) && numberOfSpins < currOptions.maxSpins && (currOptions.container.display && isEmailValid()) && bool
+        // !shouldBeEnabled ? document.querySelector(".btn").classList.add("disabled") : document.querySelector(".btn").classList.remove("disabled");
+        initActiveBtn();
+        enableBtnElement(activeBtn)
     }
 
     document.querySelector("#email")?.addEventListener("keyup", (e)=>{
@@ -251,7 +324,7 @@
     });
 
     document.querySelector("#terms")?.addEventListener("change", (e)=>{
-        changeBtnDisabledStatusByValidityOfInputs(checked);
+        changeBtnDisabledStatusByValidityOfInputs(e.target.checked);
     });
 
     document.querySelector(".config-menu-backdrop")?.addEventListener("click", (e)=>{
@@ -261,28 +334,26 @@
     let spinTaps = 0;
     const randNumOfSpins = () => Math.floor(Math.random()*10000);
     
-    const limitSpins=(element, limitNumberOfSpins, shouldLimit) =>{
-        if (!shouldLimit) return;
-        if(numberOfSpins>=limitNumberOfSpins){
-            element.onclick = "";
-            element.classList.toggle("disabled");
+    const limitSpins=() =>{
+        if (!currOptions.container.displayCheckbox) return;
+        if(isNumberOfSpinsValid()){
+            disableBtnElement(activeBtn);
+            disabledStyle(activeBtn);
         }
     };
-    const unlimitWheel = (element, limit, shouldLimit)=> {
-        element.onclick = ()=>spin(element, limit, shouldLimit);
+
+    const unlimitWheel = ()=> {
+        initActiveBtn()
+        activeBtn.onclick = ()=>spin(activeBtn);
         numberOfSpins = 0;
-        if(shouldLimit && isEmailValid()) element.classList.remove("disabled");
+        if (isEmailValid()) enabledStyle(activeBtn);
     }
     const increaseNumberOfSpins = () => {
         numberOfSpins++;
     };
     
-    function isEmailValid (value) {
-        const emailValidationPattern = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
-        const email = document.querySelector("#email").value;
-        return emailValidationPattern.test(value || email);
-    }
-    const spin = (element ,limit, shouldLimit) => {
+
+    const spin = (element) => {
         if(!isEmailValid() && currOptions.container.display) {
             return;
         };
@@ -290,7 +361,8 @@
         const rand = spinTaps+randNumOfSpins();
         document.querySelector(".spinning").style.setProperty("--random", rand);
         spinTaps=rand;
-        limitSpins(element, limit, shouldLimit);
+        initActiveBtn()
+        limitSpins();
         currOptions.onSubmit();
     };
 
