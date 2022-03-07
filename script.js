@@ -108,7 +108,6 @@
     }
     
     const enableBtnElement = () => {
-        // initActiveBtn()
         displayBtnText(activeBtn);
         if(isTermsValid() && isNumberOfSpinsValid(numberOfSpins) && isEmailValid()){
             activeBtn.onclick = () => spin();
@@ -118,11 +117,6 @@
             disableBtnElement(activeBtn);
             disabledStyle(activeBtn)
         }
-    }
-
-    const switchBtns = (btnToActivate, btnToDisable) => {
-        if (btnToActivate) enableBtnElement(btnToActivate);
-        if (btnToDisable) disableBtnElement(btnToDisable);
     }
 
     const initDisplayPointer = () => {
