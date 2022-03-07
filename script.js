@@ -370,6 +370,7 @@
         
         
         // start calc result
+
         const isOdd = currOptions.dataArr.length % 2 !== 0;
         const currPortion = 360 / currOptions.dataArr.length;
         const currDegAfterSpin = ((spinTaps % 360) - currOptions.pointerDegrees + (isOdd ? (currPortion / 2) : 0));
@@ -396,11 +397,8 @@
         
         
         // end calc result
+        
         increaseNumberOfSpins();
-
-
-
-
         initActiveBtn()
         limitSpins();
         currOptions.onSubmit();
