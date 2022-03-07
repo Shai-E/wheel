@@ -185,7 +185,7 @@ html, body{
     cursor: default!important;
 }
 
-.wheelapp .info {
+.wheelapp .wheelTextContent {
     --radius: 200;
     height: calc(var(--radius)*2px);
     width: calc(var(--radius)*2px);

@@ -8,6 +8,10 @@
     const inner = document.querySelector(".inner");
     const mainContainerBtn = document.querySelector("#containerBtn");
     const inputs = document.querySelector("#inputs");
+    const wheelContainer = document.querySelector(".wheel-container");
+    const canvasContainer = document.querySelector(".canvas-container");
+    const spinning = document.querySelector(".spinning");
+    const wheelTextContent = document.querySelector(".wheelTextContent")
 
     let activeBtn = null;
     let inactiveBtn = null;
@@ -21,7 +25,7 @@
     
     const initOptions = {
         customColorsArr: [],
-        maxSpins: 5,
+        maxSpins: 1,
         displayPointer: true,
         container: {
             width: 300,
@@ -100,14 +104,14 @@
     }
     
     const isNumberOfSpinsValid = (numberOfSpins) => {
-        return numberOfSpins < currOptions.maxSpins || !currOptions.maxSpins
+        return numberOfSpins < currOptions.maxSpins
     }
     
     const enableBtnElement = () => {
         // initActiveBtn()
         displayBtnText(activeBtn);
         if(isTermsValid() && isNumberOfSpinsValid(numberOfSpins) && isEmailValid()){
-            activeBtn.onclick = () => spin(activeBtn, currOptions.maxSpins, currOptions.container.displayCheckbox);
+            activeBtn.onclick = () => spin();
             activeBtn.style.setProperty("--setCursor", "pointer");
             enabledStyle(activeBtn);
         } else {
@@ -199,10 +203,25 @@
         executeFunctions([initDisplayPointer, initDisplayForm, initMainContainer, initMainContainerBtn, initInputsDisplay, initSettingsGui, initDisplayTerms, initActiveBtn, initGuiDisplay])
     }
 
-    
-        
-    
-    const createWheelSlice = (i, radius, dataArr, customColorsArr) => {
+    const setWheelSliceContent = (i, radius, dataArr) => {
+        const div = document.createElement('div');
+        const span = document.createElement('span');
+        div.className = `text`;
+        span.className = `text-span`;
+
+        const degrees = 360/dataArr.length;
+        div.style.setProperty("--portion", degrees);
+        div.style.setProperty("--half", dataArr.length%2 === 0 ? degrees/2 : degrees);
+        div.style.setProperty("--rotation", i);
+        div.style.setProperty("--radius", radius);
+        span.innerHTML = dataArr[i];
+        span.style.setProperty("--radius", radius);
+        div.append(span);
+        wheelTextContent.style.setProperty("--radius", radius);
+        wheelTextContent.append(div);
+    }
+
+    const setWheelSliceStyle = (i, radius, dataArr, customColorsArr) => {
         context.fillStyle = setColor(i, customColorsArr);
         context.strokeStyle = i%2===0?"black":"black";
         const portion = (Math.PI*2)/dataArr.length;
@@ -211,40 +230,14 @@
         context.stroke();
         context.arc(radius,radius,radius,Math.PI/2+(i*portion), Math.PI/2+(i+1)*portion, false); 
         context.fill();
-        
-        const div = document.createElement('div');
-        const span = document.createElement('span');
-        div.className = `text`;
-        span.className = `text-span`;
-        const degrees = 360/dataArr.length;
-        div.style.setProperty("--portion", degrees);
-        div.style.setProperty("--half", dataArr.length%2===0?degrees/2:degrees);
-        div.style.setProperty("--rotation", i);
-        div.style.setProperty("--radius", radius);
-        span.innerHTML = dataArr[i];
-        span.style.setProperty("--radius", radius);
-        div.append(span);
-        const info = document.querySelector(".info")
-        info.style.setProperty("--radius", radius);
-        info.append(div);
     }
-
+    
+    
     const saveUserOptionsToLocalStorage = () => {
         localStorage.setItem("wheel-preferences",JSON.stringify(currOptions))
     }
-
-
     
-    const createWheel=(options)=>{
-        currOptions = {...initOptions, ...options, container:{ ...initOptions.container, ...options?.container }};
-        saveUserOptionsToLocalStorage();
-        initWheelOptions();
-        const { radius, container: {display, displayCheckbox}, maxSpins, dataArr, customColorsArr } = currOptions;
-        const mainContainer = document.querySelector(".main-container");
-        const wheelContainer = document.querySelector(".wheel-container");
-        const canvasContainer = document.querySelector(".canvas-container");
-        const inner = document.querySelector(".inner");
-        const spinning = document.querySelector(".spinning");
+    const setWheelStyle = ({radius} ) => {
         mainContainer.style.setProperty("--radius", radius);
         wheelContainer.style.setProperty("--radius", radius);
         canvasContainer.style.setProperty("--radius", radius);
@@ -253,11 +246,29 @@
         canvas.width = radius*2;
         canvas.height = radius*2;
         context.clearRect(0,0,radius*2, radius*2);
-        document.querySelector(".info").innerHTML = "";
-        const btn = document.querySelector(".btn");
-        unlimitWheel();
+    }
+    
+    const resetWheelContent = () => {
+        wheelTextContent.innerHTML = "";
+    }
+    
+    const createWheelSlices = ({ radius, dataArr, customColorsArr }) => {
         dataArr.forEach((_dataItem, i)=>createWheelSlice(i, radius, dataArr, customColorsArr));
-
+    }
+    
+    const createWheelSlice = (i, radius, dataArr, customColorsArr) => {
+        setWheelSliceStyle(i, radius, dataArr, customColorsArr);
+        setWheelSliceContent(i, radius, dataArr);
+    }
+    
+    const createWheel=(options)=>{
+        currOptions = {...initOptions, ...options, container:{ ...initOptions.container, ...options?.container }};
+        saveUserOptionsToLocalStorage();
+        initWheelOptions();
+        setWheelStyle(currOptions);
+        resetWheelContent();
+        unlimitWheel();
+        createWheelSlices(currOptions)
     }
     
     document.querySelector("#inputs")?.addEventListener("keyup", (e)=>{
@@ -312,9 +323,7 @@
         createWheel({...options, container: {...options.container, termsText: value}});
     });
 
-    const changeBtnDisabledStatusByValidityOfInputs = ( bool = true) => {
-        // const shouldBeEnabled = ((document.querySelector("#terms").checked && currOptions.container.displayCheckbox) || !currOptions.container.displayCheckbox) && numberOfSpins < currOptions.maxSpins && (currOptions.container.display && isEmailValid()) && bool
-        // !shouldBeEnabled ? document.querySelector(".btn").classList.add("disabled") : document.querySelector(".btn").classList.remove("disabled");
+    const changeBtnDisabledStatusByValidityOfInputs = () => {
         initActiveBtn();
         enableBtnElement(activeBtn)
     }
@@ -353,7 +362,7 @@
     };
     
 
-    const spin = (element) => {
+    const spin = () => {
         if(!isEmailValid() && currOptions.container.display) {
             return;
         };
