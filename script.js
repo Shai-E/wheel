@@ -16,6 +16,7 @@
     let activeBtn = null;
     let inactiveBtn = null;
     let numberOfSpins = 0;
+    let spinTaps = 0;
     let currOptions = {}
     
     let colors = {
@@ -41,6 +42,7 @@
         },
         radius: 200,
         dataArr: ["Almost!", "SEO Audit", "Sorry, try again!", "Kickstart Money Course", "Next time!", "Content Audit", "So close!", "SEO Call With My Team"],
+        dataArr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         buttonText: "Try My Luck",
         buttonBgColor: "#53B753",
         buttonTextColor: "#fff",
@@ -334,7 +336,6 @@
         document.querySelector("#config-menu-checkbox").checked = false;
     });
     
-    let spinTaps = 0;
     const randNumOfSpins = () => Math.floor(Math.random()*10000);
     
     const limitSpins=() =>{
@@ -355,7 +356,6 @@
         numberOfSpins++;
     };
     
-
     const spin = () => {
         if(!isEmailValid() && currOptions.container.display) {
             return;
@@ -364,6 +364,26 @@
         const rand = spinTaps+randNumOfSpins();
         document.querySelector(".spinning").style.setProperty("--random", rand);
         spinTaps=rand;
+
+
+
+
+
+// start calc result
+
+        const currPortion = 360 / currOptions.dataArr.length;
+        const currrDegAfterSpin = ((spinTaps % 360) - currOptions.pointerDegrees);
+        const spinDeg = Math.floor(currrDegAfterSpin / currPortion)
+        const isBackwards = spinDeg < 0
+        let baseNum = isBackwards ? Math.floor(Math.abs(currrDegAfterSpin / currPortion)) : spinDeg;
+        console.log("spin result",isBackwards ?currOptions.dataArr[baseNum] : currOptions.dataArr.reverse()[baseNum]);
+        
+
+// end calc result
+
+
+
+
         initActiveBtn()
         limitSpins();
         currOptions.onSubmit();
@@ -372,4 +392,8 @@
     
     createWheel({ allowConfigGui: true });
 
+
+    // TODO: Upload file to customize pointer
+    // TODO: Handle spins with no limit option
+    // TODO: Find and present result (where the pointer points)
 })()
