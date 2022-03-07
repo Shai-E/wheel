@@ -18,6 +18,7 @@
     let numberOfSpins = 0;
     let spinTaps = 0;
     let currOptions = {}
+
     
     let colors = {
         red: "#e74c3c",
@@ -26,7 +27,7 @@
     
     const initOptions = {
         customColorsArr: [],
-        maxSpins: 1,
+        maxSpins: 5,
         displayPointer: true,
         container: {
             width: 300,
@@ -41,7 +42,7 @@
             termsText: "I agree to receive an email that'll allow me to claim my prize and helpful email series from BloggersIdeas.com", 
         },
         radius: 200,
-        dataArr: ["Almost!", "SEO Audit", "Sorry, try again!", "Kickstart Money Course", "Next time!", "Content Audit", "So close!", "SEO Call With My Team"],
+        // dataArr: ["Almost!", "SEO Audit", "Sorry, try again!", "Kickstart Money Course", "Next time!", "Content Audit", "So close!", "SEO Call With My Team"],
         dataArr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         buttonText: "Try My Luck",
         buttonBgColor: "#53B753",
@@ -360,26 +361,42 @@
         if(!isEmailValid() && currOptions.container.display) {
             return;
         };
-        increaseNumberOfSpins();
         const rand = spinTaps+randNumOfSpins();
         document.querySelector(".spinning").style.setProperty("--random", rand);
         spinTaps=rand;
-
-
-
-
-
-// start calc result
-
-        const currPortion = 360 / currOptions.dataArr.length;
-        const currrDegAfterSpin = ((spinTaps % 360) - currOptions.pointerDegrees);
-        const spinDeg = Math.floor(currrDegAfterSpin / currPortion)
-        const isBackwards = spinDeg < 0
-        let baseNum = isBackwards ? Math.floor(Math.abs(currrDegAfterSpin / currPortion)) : spinDeg;
-        console.log("spin result",isBackwards ?currOptions.dataArr[baseNum] : currOptions.dataArr.reverse()[baseNum]);
+        
         
 
-// end calc result
+        
+        
+        // start calc result
+        const isOdd = currOptions.dataArr.length % 2 !== 0;
+        const currPortion = 360 / currOptions.dataArr.length;
+        const currDegAfterSpin = ((spinTaps % 360) - currOptions.pointerDegrees + (isOdd ? (currPortion / 2) : 0));
+        const fullDeg = currDegAfterSpin / currPortion
+        const isBackwards2 = fullDeg < 0; // take into account
+        const spinDeg = Math.floor((fullDeg) - (currPortion * numberOfSpins));
+        const isBackwards = spinDeg < 0; // take into account
+        // let baseNum = isBackwards ? Math.floor(Math.abs(fullDeg)) : numberOfSpins ? spinDeg : currOptions.dataArr.length- spinDeg;
+
+        let baseNum = isBackwards ? Math.floor(Math.abs(fullDeg)) : spinDeg;
+        console.log("baseNum", baseNum);
+        console.log("fullDeg", fullDeg);
+
+
+        console.log("_________________________");
+
+        console.log("spinDeg", spinDeg);
+        console.log("isBackwords", isBackwards);
+        console.log("reg", currOptions.dataArr[baseNum]);
+        console.log("reverse", currOptions.dataArr.reverse()[baseNum]);
+        console.log(isBackwards && isBackwards2);
+        console.log("spin result", numberOfSpins && isBackwards && isBackwards2 ? currOptions.dataArr[baseNum] : isBackwards ? currOptions.dataArr.reverse()[baseNum] : currOptions.dataArr[baseNum]);
+        console.log("_________________________");
+        
+        
+        // end calc result
+        increaseNumberOfSpins();
 
 
 
