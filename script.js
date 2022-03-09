@@ -359,20 +359,20 @@
     };
 
     const calcResult = () => {
-        const isOdd = currOptions.dataArr.length % 2 !== 0;
-        const currPortion = 360 / currOptions.dataArr.length;
-        const currDegAfterSpin = ((spinTaps % 360) - currOptions.pointerDegrees + (isOdd ? (currPortion / 2) : 0));
-        const fullDeg = currDegAfterSpin / currPortion
+        const numberOfSlices = currOptions.dataArr.length;
+        const isOdd = numberOfSlices % 2 !== 0;
+        const slicePortion = 360 / numberOfSlices;
+        const currDegAfterSpin = ((spinTaps % 360) - currOptions.pointerDegrees + (isOdd ? (slicePortion / 2) : 0));
+        const fullDeg = currDegAfterSpin / slicePortion;
         const isBackwards2 = fullDeg < 0;
-        const spinDeg = Math.floor((fullDeg) - (currPortion * numberOfSpins));
+        const spinDeg = Math.floor((fullDeg) - (slicePortion * numberOfSpins));
         const isBackwards = spinDeg < 0;
 
-        let baseNum = isBackwards ? Math.floor(Math.abs(fullDeg)) : spinDeg;
+        let resultIndex = isBackwards ? Math.floor(Math.abs(fullDeg)) : spinDeg;
 
         const getResult = () => {
             const newArr = isBackwards2 && isBackwards ? [...currOptions.dataArr] :[...currOptions.dataArr].reverse()
-            result = newArr[baseNum]
-            // console.log(result);
+            result = newArr[resultIndex]
             document.querySelector("#result").innerText = result
             return result;
         }
@@ -386,11 +386,7 @@
         const rand = spinTaps+randNumOfSpins();
         document.querySelector(".spinning").style.setProperty("--random", rand);
         spinTaps=rand;
-        
-        // start calc result
-
-        calcResult()
-        
+        calcResult();
         increaseNumberOfSpins();
         initActiveBtn()
         limitSpins();
@@ -403,5 +399,4 @@
 
     // TODO: Upload file to customize pointer
     // TODO: Handle spins with no limit option
-    // TODO: Find and present result (where the pointer points)
 })()
