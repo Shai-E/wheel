@@ -28,7 +28,7 @@
     
     const initOptions = {
         customColorsArr: [],
-        maxSpins: 3,
+        maxSpins: null,
         displayPointer: true,
         container: {
             width: 300,
@@ -344,6 +344,11 @@
         createWheel({...options, container: {...options.container, termsText: value}});
     });
 
+    document.querySelector("#customPointer")?.addEventListener("change", (e)=>{
+        const res = e.target.files[0];
+        console.dir(res);
+    })
+
     const changeBtnDisabledStatusByValidityOfInputs = () => {
         initActiveBtn();
         enableBtnElement(activeBtn)
@@ -364,7 +369,7 @@
     const randNumOfSpins = () => Math.floor(Math.random()*10000);
     
     const limitSpins=() =>{
-        if(!isNumberOfSpinsValid(numberOfSpins)){
+        if(!isNumberOfSpinsValid(numberOfSpins) && currOptions.maxSpins !== null){
             disableBtnElement(activeBtn);
             disabledStyle(activeBtn);
         }
