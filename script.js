@@ -109,8 +109,8 @@
     }
 
     const calcSpinsLeft = () => {
-        const spinsLeft = numberOfSpins < currOptions.maxSpins ? currOptions.maxSpins - numberOfSpins : 0 ;
-        document.querySelector("#spins-left").innerText = spinsLeft;
+        const spinsLeft = numberOfSpins < currOptions.maxSpins ? currOptions.maxSpins - numberOfSpins - 1 : 0 ;
+        document.querySelector("#spins-left").innerText = "Spins You Have Left: " + spinsLeft;
         return spinsLeft;
     }
     
@@ -395,7 +395,7 @@
         const getResult = () => {
             const newArr = isBackwards2 && isBackwards ? [...currOptions.dataArr] :[...currOptions.dataArr].reverse()
             spinResult = newArr[resultIndex]
-            document.querySelector("#result").innerText = spinResult
+            document.querySelector("#result").innerText = "Spin Result: "+ spinResult
             return spinResult;
         }
         getResult();
