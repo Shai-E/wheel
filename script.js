@@ -270,6 +270,8 @@
     
     const createWheel=(options)=>{
         currOptions = {...initOptions, ...options, container:{ ...initOptions.container, ...options?.container }};
+        numberOfSpins = +localStorage.getItem('numberOfSpins') || 0;
+
         saveUserOptionsToLocalStorage();
         initWheelOptions();
         setWheelStyle(currOptions);
@@ -384,6 +386,7 @@
     }
     const increaseNumberOfSpins = () => {
         numberOfSpins++;
+        localStorage.setItem('numberOfSpins', numberOfSpins)
     };
 
     const calcResult = () => {
@@ -400,21 +403,21 @@
 
         const getResult = () => {
             const newArr = isBackwards2 && isBackwards ? [...currOptions.dataArr] :[...currOptions.dataArr].reverse()
-            const resultActualIndex = isBackwards2 && isBackwards ? resultIndex :currOptions.dataArr.length-(currOptions.dataArr.length-resultIndex)
             spinResult = newArr[resultIndex]
-            currOptions.removePickedSlice && removePickedSlice(spinResult, resultActualIndex);
+            currOptions.removePickedSlice && removePickedSlice(spinResult, newArr.filter((_v,i)=>i!==resultIndex));
 
-            document.querySelector("#result").innerText = "Last Spin Result: "+ spinResult
             return spinResult;
         }
         getResult();
     }
-
-    const removePickedSlice = (spinResult, resultIndex) => {
+    
+    const removePickedSlice = (spinResult, newArr) => {
         setTimeout(()=>{
             if(confirm("Your result is: " + spinResult + ". Remove result from wheel?")){
-                createWheel({dataArr: [...currOptions.dataArr].reverse().filter((_v, i)=> i!==resultIndex)})
+                const options = JSON.parse(localStorage.getItem("wheel-preferences"));
+                createWheel({...options, dataArr: newArr})
             }
+            document.querySelector("#result").innerText = "Last Spin Result: "+ spinResult
         },3000)
     }
     
