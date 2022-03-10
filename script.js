@@ -28,7 +28,7 @@
     
     const initOptions = {
         customColorsArr: [],
-        maxSpins: 5,
+        maxSpins: 3,
         displayPointer: true,
         container: {
             width: 300,
@@ -86,10 +86,11 @@
     }
     
     const disabledStyle = (btnElement) => {
+        
         btnElement.classList.add("disabled");
         btnElement.setAttribute("disabled", true);
     }
-
+    
     const enabledStyle = (btnElement) => {
         btnElement.removeAttribute("disabled");
         btnElement.classList.remove("disabled");
@@ -106,20 +107,26 @@
         const email = document.querySelector("#email").value;
         return emailValidationPattern.test(value || email) || !currOptions.container.display;
     }
+
+    const calcSpinsLeft = () => {
+        result = numberOfSpins < currOptions.maxSpins ? currOptions.maxSpins - numberOfSpins : 0 ;
+        document.querySelector("#spins-left").innerText = result;
+        return result;
+    }
     
     const isNumberOfSpinsValid = (numberOfSpins) => {
-        return numberOfSpins < currOptions.maxSpins
+        return  numberOfSpins < currOptions.maxSpins
     }
     
     const enableBtnElement = () => {
         displayBtnText(activeBtn);
-        if(isTermsValid() && isNumberOfSpinsValid(numberOfSpins) && isEmailValid()){
+        if(isTermsValid() && (isNumberOfSpinsValid(numberOfSpins) || currOptions.maxSpins === null) && isEmailValid()){
             activeBtn.onclick = () => spin();
             activeBtn.style.setProperty("--setCursor", "pointer");
             enabledStyle(activeBtn);
         } else {
             disableBtnElement(activeBtn);
-            disabledStyle(activeBtn)
+            disabledStyle(activeBtn);
         }
     }
 
@@ -152,6 +159,7 @@
         document.querySelector("#pointerPosition").value = currOptions.pointerDegrees;
         document.querySelector("#containerWidth").value = currOptions.container.width;
         document.querySelector("#wheelRadius").value = currOptions.radius;
+        if(currOptions.maxSpins !== null)document.querySelector("#maxSpins").value = currOptions.maxSpins;
         document.querySelectorAll(".ifContainer").forEach(i => i.style.display = currOptions.container.display ? 'table-row' : 'none')
         document.querySelectorAll(".ifTerms").forEach(i => i.style.display = currOptions.container.displayCheckbox && currOptions.container.display ? 'table-row' : 'none')
     }
@@ -314,6 +322,21 @@
         const options = JSON.parse(localStorage.getItem("wheel-preferences"));
         createWheel({...options, container: {...options.container, displayCheckbox: checked}});
     });
+    let currMaxSpinsValue = JSON.parse(localStorage.getItem("wheel-preferences"))?.maxSpins || +document.querySelector("#maxSpins").value;
+
+    document.querySelector("#maxSpins").addEventListener("input", (e)=>{
+        if(currMaxSpinsValue !== null) currMaxSpinsValue = +e.target.value;
+        const options = JSON.parse(localStorage.getItem("wheel-preferences"));
+        createWheel({...options, maxSpins: currMaxSpinsValue});
+    })
+
+    document.querySelector("#isUnlimitedSpins")?.addEventListener("click", (e)=>{
+        const checked = e.target.checked;
+        const currValue = +document.querySelector("#maxSpins").value
+        currMaxSpinsValue = checked ? null : currValue;
+        const options = JSON.parse(localStorage.getItem("wheel-preferences"));
+        createWheel({...options, maxSpins: currMaxSpinsValue});
+    });
 
     document.querySelector("#termsTextInput")?.addEventListener("keyup", (e)=>{
         const value = e.target.value
@@ -341,8 +364,7 @@
     const randNumOfSpins = () => Math.floor(Math.random()*10000);
     
     const limitSpins=() =>{
-        if (!currOptions.container.displayCheckbox) return;
-        if(isNumberOfSpinsValid()){
+        if(!isNumberOfSpinsValid(numberOfSpins)){
             disableBtnElement(activeBtn);
             disabledStyle(activeBtn);
         }
@@ -352,7 +374,7 @@
         initActiveBtn()
         activeBtn.onclick = ()=>spin(activeBtn);
         numberOfSpins = 0;
-        if (isEmailValid()) enabledStyle(activeBtn);
+        if (isEmailValid() && (isNumberOfSpinsValid(numberOfSpins) || currOptions.maxSpins === null)) enabledStyle(activeBtn);
     }
     const increaseNumberOfSpins = () => {
         numberOfSpins++;
@@ -387,6 +409,7 @@
         document.querySelector(".spinning").style.setProperty("--random", rand);
         spinTaps=rand;
         calcResult();
+        calcSpinsLeft();
         increaseNumberOfSpins();
         initActiveBtn()
         limitSpins();
@@ -398,5 +421,5 @@
 
 
     // TODO: Upload file to customize pointer
-    // TODO: Handle spins with no limit option
+    // TODO: Add spins you have left to settings
 })()

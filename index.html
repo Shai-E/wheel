@@ -19,6 +19,7 @@
         <!-- <div class="result-backdrop">
 
         </div> -->
+        <div id="spins-left"></div>
         <div id="result"></div>
         <div class="config-menu" id="config-menu">
             <div class="config-menu-backdrop" id="config-menu-backdrop"></div>
@@ -92,6 +93,22 @@
                         </td>
                         <td>
                             <input type="range" name="pointerPosition" id="pointerPosition" min="0" max="360"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="isUnlimitedSpins">Unlimited Spins: </label>
+                        </td>
+                        <td>
+                            <input type="checkbox" name="isUnlimitedSpins" id="isUnlimitedSpins"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="maxSpins">Limit Spins: </label>
+                        </td>
+                        <td>
+                            <input type="range" name="maxSpins" id="maxSpins" min="0" max="5"/>
                         </td>
                     </tr>
                     <tr>
