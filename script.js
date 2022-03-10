@@ -421,5 +421,7 @@
 
 
     // TODO: Upload file to customize pointer
-    // TODO: Add spins you have left to settings
+    // TODO: Add "spins you have left", "display result" to settings
+    // TODO: Improve UI
+    // TODO: Add option to remove slice result from wheel after being chosen.
 })()
