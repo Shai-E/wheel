@@ -30,6 +30,7 @@
         customColorsArr: [],
         maxSpins: null,
         displayPointer: true,
+        removePickedSlice: true,
         container: {
             width: 300,
             display: true,
@@ -40,7 +41,7 @@
             displayCheckbox: true,
             formTitle: "Spin to Win!",
             formSubTitle: "Enter your email for the chance to win!",
-            termsText: "I agree to receive an email that'll allow me to claim my prize and helpful email series from BloggersIdeas.com", 
+            termsText: "I agree to receive an email that'll allow me to claim my prize.", 
         },
         radius: 200,
         // dataArr: ["Almost!", "SEO Audit", "Sorry, try again!", "Kickstart Money Course", "Next time!", "Content Audit", "So close!", "SEO Call With My Team"],
@@ -345,8 +346,8 @@
     });
 
     document.querySelector("#customPointer")?.addEventListener("change", (e)=>{
-        const res = e.target.files[0];
-        console.dir(res);
+        const file = e.target.files[0];
+        document.querySelector(".pointer").src = URL.createObjectURL(file)
     })
 
     const changeBtnDisabledStatusByValidityOfInputs = () => {
@@ -399,11 +400,22 @@
 
         const getResult = () => {
             const newArr = isBackwards2 && isBackwards ? [...currOptions.dataArr] :[...currOptions.dataArr].reverse()
+            const resultActualIndex = isBackwards2 && isBackwards ? resultIndex :currOptions.dataArr.length-(currOptions.dataArr.length-resultIndex)
             spinResult = newArr[resultIndex]
-            document.querySelector("#result").innerText = "Spin Result: "+ spinResult
+            currOptions.removePickedSlice && removePickedSlice(spinResult, resultActualIndex);
+
+            document.querySelector("#result").innerText = "Last Spin Result: "+ spinResult
             return spinResult;
         }
         getResult();
+    }
+
+    const removePickedSlice = (spinResult, resultIndex) => {
+        setTimeout(()=>{
+            if(confirm("Your result is: " + spinResult + ". Remove result from wheel?")){
+                createWheel({dataArr: [...currOptions.dataArr].reverse().filter((_v, i)=> i!==resultIndex)})
+            }
+        },3000)
     }
     
     const spin = () => {
@@ -428,5 +440,4 @@
     // TODO: Upload file to customize pointer
     // TODO: Add "spins you have left", "display result" to settings
     // TODO: Improve UI
-    // TODO: Add option to remove slice result from wheel after being chosen.
 })()
