@@ -18,7 +18,7 @@
     let numberOfSpins = 0;
     let spinTaps = 0;
     let currOptions = {}
-    let result = "";
+    let spinResult = "";
 
     
     let colors = {
@@ -109,9 +109,9 @@
     }
 
     const calcSpinsLeft = () => {
-        result = numberOfSpins < currOptions.maxSpins ? currOptions.maxSpins - numberOfSpins : 0 ;
-        document.querySelector("#spins-left").innerText = result;
-        return result;
+        const spinsLeft = numberOfSpins < currOptions.maxSpins ? currOptions.maxSpins - numberOfSpins : 0 ;
+        document.querySelector("#spins-left").innerText = spinsLeft;
+        return spinsLeft;
     }
     
     const isNumberOfSpinsValid = (numberOfSpins) => {
@@ -394,9 +394,9 @@
 
         const getResult = () => {
             const newArr = isBackwards2 && isBackwards ? [...currOptions.dataArr] :[...currOptions.dataArr].reverse()
-            result = newArr[resultIndex]
-            document.querySelector("#result").innerText = result
-            return result;
+            spinResult = newArr[resultIndex]
+            document.querySelector("#result").innerText = spinResult
+            return spinResult;
         }
         getResult();
     }
