@@ -1,96 +1,99 @@
 .wheelapp .config-menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    transition: margin .5s ease-in-out;
-    z-index: 998;
-    height: 100%;
-    width: 100%;
-    justify-content: center;
-    padding: 50px;
-    border-radius: 10px;
-    overflow: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: margin 0.5s ease-in-out;
+  z-index: 998;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  padding: 50px;
+  border-radius: 10px;
+  overflow: auto;
 }
 
 .wheelapp .config-menu-backdrop {
-    position: absolute;
-    top: 0;
-   height: 100%;
-   width: 100%;
-   background-color: rgba(255, 255, 255, 0.205);
-
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.205);
 }
 
 .wheelapp .config-menu-content {
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-    min-width: 600px;
-    height: 60%;
-    padding: 50px;
-    justify-content: center;
-    border-radius: 10px;
-    backdrop-filter: blur(50%);
-    backdrop-filter: blur(5px) saturate(200%);
-    -webkit-backdrop-filter: blur(5px) saturate(200%);
-    background-color: rgba(255, 255, 255, 0.699);
-    border-radius: 12px;
-    border: 1px solid rgba(209, 213, 219, 0.3);
-    overflow: auto;
-    box-sizing: content-box;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  min-width: 600px;
+  height: 100%;
+  padding: 50px;
+  justify-content: center;
+  border-radius: 10px;
+  backdrop-filter: blur(50%);
+  backdrop-filter: blur(5px) saturate(200%);
+  -webkit-backdrop-filter: blur(5px) saturate(200%);
+  background-color: rgba(255, 255, 255, 0.699);
+  border-radius: 12px;
+  border: 1px solid rgba(209, 213, 219, 0.3);
+  overflow: auto;
+  box-sizing: content-box;
+  align-items: center;
+}
+
+.wheelapp th {
+  height: 40px;
 }
 
 @media only screen and (max-width: 700px) {
-    .wheelapp .config-menu-content {
-        width: 100%;
-        min-width: auto;
-    }
-    
+  .wheelapp .config-menu-content {
+    width: 100%;
+    min-width: auto;
+  }
 }
 
 .wheelapp #config-menu-label {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .wheelapp .config-menu::before {
-    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
-    filter: blur(10px);
+  box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+  filter: blur(10px);
 }
 
 .wheelapp .checkbox-label {
-    position: fixed;
-    top: 0;
-    left: 50%;
-    z-index: 999;
-    transform: translateX(-50%);
+  position: fixed;
+  top: 0;
+  left: 50%;
+  z-index: 999;
+  transform: translateX(-50%);
 }
 
 .wheelapp #config-menu-checkbox {
-    display:none;
+  display: none;
 }
 
 .wheelapp #config-menu-checkbox ~ .config-menu {
-    margin: 0 -100% 0 -100%;
+  margin: 0 -100% 0 -100%;
 }
 
 .wheelapp #config-menu-checkbox:checked ~ .config-menu {
-    display: flex;
-    margin: 0 0 0 0;
+  display: flex;
+  margin: 0 0 0 0;
 }
 
 .wheelapp #inputs {
-    resize: none;
-    padding: 10px 30px;
-    backdrop-filter: blur(50%);
-    backdrop-filter: blur(5px) saturate(200%);
-    -webkit-backdrop-filter: blur(5px) saturate(200%);
-    background-color: rgba(255, 255, 255, 0.68);
-    border-radius: 12px;
-    border: 1px solid rgba(209, 213, 219, 0.3);
-    height: 100px;
-    min-height: 100px;
+  resize: none;
+  padding: 10px 30px;
+  backdrop-filter: blur(50%);
+  backdrop-filter: blur(5px) saturate(200%);
+  -webkit-backdrop-filter: blur(5px) saturate(200%);
+  background-color: rgba(255, 255, 255, 0.68);
+  border-radius: 12px;
+  border: 1px solid rgba(209, 213, 219, 0.3);
+  height: 100px;
+  min-height: 100px;
 }

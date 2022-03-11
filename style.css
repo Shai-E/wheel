@@ -1,245 +1,242 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
-.wheelapp{
-    --fontSize: 16;
-    height: 100%;
-    width: 100%;
-    background-color: beige;
-    cursor: default;
-    font-size: calc(var(--fontSize) * 1px);
+.wheelapp {
+  --fontSize: 16;
+  height: 100%;
+  width: 100%;
+  background-color: beige;
+  cursor: default;
+  font-size: calc(var(--fontSize) * 1px);
 }
 
 .wheelapp * {
-    font-family: 'Roboto Slab', serif;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  font-family: "Roboto Slab", serif;
+  margin: 0;
+  padding: 0;
 }
 
 .wheelapp .main-container {
-    --radius: 200;
-    --width: 300;
-    --borderRadius: 25;
-    --backgroundColor: #0A4260;
-    width: calc(var(--radius)*2px + var(--width)*1px + 10px); /* customComponentWidth + 5px */
-    height: calc(var(--radius)*2px + 10px);
-    min-height: fit-content;
-    display: flex;
-    background-color: var(--backgroundColor);
-    color: #fff;
-    position: fixed;
-    align-items: center;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: calc(var(--radius)*1px) calc(var(--borderRadius)*1px)  calc(var(--borderRadius)*1px) calc(var(--radius)*1px);
+  --radius: 200;
+  --width: 300;
+  --borderRadius: 25;
+  --backgroundColor: #0a4260;
+  width: calc(var(--radius) * 2px + var(--width) * 1px + 10px); /* customComponentWidth + 5px */
+  height: calc(var(--radius) * 2px + 10px);
+  min-height: fit-content;
+  display: flex;
+  background-color: var(--backgroundColor);
+  color: #fff;
+  position: fixed;
+  align-items: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: calc(var(--radius) * 1px) calc(var(--borderRadius) * 1px) calc(var(--borderRadius) * 1px)
+    calc(var(--radius) * 1px);
 }
 
 .wheelapp .wheel-container {
-    --radius: 200;
-    width: calc(var(--radius)*2px);
-    height: calc(var(--radius)*2px);
-    margin-left: 5px;
-    border-radius: 50%;
-    background-color: #0A4260;
-    box-shadow: 0px 0px 5px black;
-    position: relative;
+  --radius: 200;
+  width: calc(var(--radius) * 2px);
+  height: calc(var(--radius) * 2px);
+  margin-left: 5px;
+  border-radius: 50%;
+  background-color: #0a4260;
+  box-shadow: 0px 0px 5px black;
+  position: relative;
 }
 
-.wheelapp .form-container{
-    --width: 300;
-    width: calc(var(--width) * 1px);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    height: 100%;
-    position: relative;
+.wheelapp .form-container {
+  --width: 300;
+  width: calc(var(--width) * 1px);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100%;
+  position: relative;
 }
 
 .wheelapp .btn {
-    --btnBackgroundColor: #53B753;
-    --btnTextColor: #fff;
-    background-color: var(--btnBackgroundColor);
-    color: var(--btnTextColor);
-    border: 2px solid transparent;
+  --btnBackgroundColor: #53b753;
+  --btnTextColor: #fff;
+  background-color: var(--btnBackgroundColor);
+  color: var(--btnTextColor);
+  border: 2px solid transparent;
 }
 
 .wheelapp .d-flex-row {
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .wheelapp .d-flex-row p {
-    margin: 0;
-    padding-left: 10px;
-    font-style: italic;
+  margin: 0;
+  padding-left: 10px;
+  font-style: italic;
 }
 
-.wheelapp input, .wheelapp button {
-    border-radius: 5px;
-    outline: none;
-    border:1px solid #f5f5dc5b;
-    cursor: pointer;
-    z-index: 903;
+.wheelapp input,
+.wheelapp button {
+  border-radius: 5px;
+  outline: none;
+  border: 1px solid #f5f5dc5b;
+  cursor: pointer;
+  z-index: 903;
 }
 
 .wheelapp input {
-    padding: .8rem;
-    font-size: 1rem;
+  padding: 0.8rem;
+  font-size: 1rem;
 }
 
 .wheelapp .terms-label {
-    z-index: 903;
+  z-index: 903;
 }
 
 .wheelapp button {
-    padding: .6rem;
-    font-weight: bold;
-    font-size: 1.5rem;
+  padding: 0.6rem;
+  font-weight: bold;
+  font-size: 1.5rem;
 }
 
 .wheelapp button:hover {
-    box-shadow: 0px 1px 5px black;
+  box-shadow: 0px 1px 5px black;
 }
 
 .wheelapp h1 {
-    font-weight: bold;
-    font-size: 2.5rem;
+  font-weight: bold;
+  font-size: 2.5rem;
 }
 
 .wheelapp h3 {
-    font-weight: 500;
+  font-weight: 500;
 }
 
 .wheelapp .pointer-container {
-    --radius: 200;
-    --pointerDegrees: 45;
-    width: 100%;
-    height: 100%;
-    transform: rotate(calc(var(--pointerDegrees) * 1deg)) /* translate(-15%,25%) */;
-    display: flex;
-    position: absolute;
-    /* top: calc(); */
-    left: 0;
-    justify-content: center;
-    z-index: 900;
-    /* background-color: #0A4260; */
+  --radius: 200;
+  --pointerDegrees: 45;
+  width: 100%;
+  height: 100%;
+  transform: rotate(calc(var(--pointerDegrees) * 1deg)) /* translate(-15%,25%) */;
+  display: flex;
+  position: absolute;
+  /* top: calc(); */
+  left: 0;
+  justify-content: center;
+  z-index: 900;
+  /* background-color: #0A4260; */
 }
 .wheelapp .pointer {
-    transform: translatey(-70%);
-    width: 40px;
-    height:fit-content;
-    z-index: 100;
+  --pointerSize: 40;
+  transform: translatey(-70%);
+  width: calc(var(--pointerSize) * 1px);
+  height: fit-content;
+  z-index: 100;
 }
-
-
 
 /* wheel */
 
-
-html, body{
-    height: 100%;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+html,
+body {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-
 .wheelapp .canvas-container {
-    --radius: 200;
-    height: calc(var(--radius)*2px);
-    width: calc(var(--radius)*2px);
-    position: relative;
+  --radius: 200;
+  height: calc(var(--radius) * 2px);
+  width: calc(var(--radius) * 2px);
+  position: relative;
 }
 
 .wheelapp .inner {
-    --radius: 200;
-    width: calc(var(--radius)*.5px);
-    height: calc(var(--radius)*.5px);
-    background-color: white;
-    color: #000;
-    /* border: 2px solid black; */
-    box-shadow: 0px 0px 5px black;
-    border-radius: 50%;
-    z-index: 901;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* cursor: pointer; */
-    text-align: center;
-    text-transform: uppercase;
-    --setCursor: default;
-    cursor: var(--setCursor);
+  --radius: 200;
+  width: calc(var(--radius) * 0.5px);
+  height: calc(var(--radius) * 0.5px);
+  background-color: white;
+  color: #000;
+  /* border: 2px solid black; */
+  box-shadow: 0px 0px 5px black;
+  border-radius: 50%;
+  z-index: 901;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* cursor: pointer; */
+  text-align: center;
+  text-transform: uppercase;
+  --setCursor: default;
+  cursor: var(--setCursor);
 }
 
 .wheelapp .disabled {
-    background-color: #cecece!important;
-    color: rgb(255, 255, 255)!important;
-    border: 2px solid white!important;
-    cursor: default!important;
+  background-color: #cecece !important;
+  color: rgb(255, 255, 255) !important;
+  border: 2px solid white !important;
+  cursor: default !important;
 }
 
 .wheelapp .wheelTextContent {
-    --radius: 200;
-    height: calc(var(--radius)*2px);
-    width: calc(var(--radius)*2px);
-    position: absolute;
-    top:0;
+  --radius: 200;
+  height: calc(var(--radius) * 2px);
+  width: calc(var(--radius) * 2px);
+  position: absolute;
+  top: 0;
 }
 
 .wheelapp .text-span {
-    --radius: 200;
-    max-width: calc(var(--radius)*.5px);
-    height: fit-content;
-    width:fit-content;
-    transform: translateY(calc(var(--radius)*.2px)) rotate(270deg);
-    text-align: right;
+  --radius: 200;
+  max-width: calc(var(--radius) * 0.5px);
+  height: fit-content;
+  width: fit-content;
+  transform: translateY(calc(var(--radius) * 0.2px)) rotate(270deg);
+  text-align: right;
 }
 
 .wheelapp .text {
-    position: absolute;
-    left: 50%;
-    /* text-align: center; */
-    
-    display: flex;
-    justify-content: center;
-    --radius: 200;
-    height: calc(var(--radius)*2px);
-    width: calc(var(--radius)*2px);
-    /* height: 400px;
+  position: absolute;
+  left: 50%;
+  /* text-align: center; */
+
+  display: flex;
+  justify-content: center;
+  --radius: 200;
+  height: calc(var(--radius) * 2px);
+  width: calc(var(--radius) * 2px);
+  /* height: 400px;
     width: 400px; */
-    --rotation: 0;
-    --portion: 0;
-    --half: 0;
-    transform: translateX(-50%) rotate(calc( var(--half)*1deg + ((var(--portion))*var(--rotation)*1deg)  ));
-
-
+  --rotation: 0;
+  --portion: 0;
+  --half: 0;
+  transform: translateX(-50%) rotate(calc(var(--half) * 1deg + ((var(--portion)) * var(--rotation) * 1deg)));
 }
 
 .wheelapp .spinning {
-    --radius: 200;
-    --randon: 0;
-    transform: rotate(calc(var(--random)*1deg));
-    transition: transform 3s ease-in-out;
-    height: calc(var(--radius)*2px);
-    width: calc(var(--radius)*2px);
+  --radius: 200;
+  --randon: 0;
+  transform: rotate(calc(var(--random) * 1deg));
+  transition: transform 3s ease-in-out;
+  height: calc(var(--radius) * 2px);
+  width: calc(var(--radius) * 2px);
 }
 
 .wheelapp .hand {
-    width: 0; 
-    height: 0; 
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent; 
-    
-    border-right:10px solid black; 
-    position: absolute;
-    right:-5px;
-    top: 50%;
-    transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+
+  border-right: 10px solid black;
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
 }

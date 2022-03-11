@@ -1,162 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Spin to Win</title>
-    <link rel="stylesheet" href="./style.css">
-    <link rel="stylesheet" href="./navMenu.css">
-    <link rel="stylesheet" href="./result.css">
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./navMenu.css" />
+    <link rel="stylesheet" href="./result.css" />
     <script src="./script.js" defer></script>
-</head>
-<body>
+  </head>
+  <body>
     <div class="wheelapp">
-        <input type="checkbox" name="config-menu-checkbox" id="config-menu-checkbox" >
-        <label for="config-menu-checkbox" class="checkbox-label" id="config-menu-label">
-            ⚙
-        </label>
-        <!-- <div class="result-backdrop">
+      <input type="checkbox" name="config-menu-checkbox" id="config-menu-checkbox" />
+      <label for="config-menu-checkbox" class="checkbox-label" id="config-menu-label"> ⚙ </label>
+      <!-- <div class="result-backdrop">
 
         </div> -->
-        <div id="spins-left"></div>
-        <div id="result"></div>
-        <div class="config-menu" id="config-menu">
-            <div class="config-menu-backdrop" id="config-menu-backdrop"></div>
-            <div class="config-menu-content">
-                <h1>Settings</h1>
+      <div id="spins-left"></div>
+      <div id="result"></div>
+      <div class="config-menu" id="config-menu">
+        <div class="config-menu-backdrop" id="config-menu-backdrop"></div>
+        <div class="config-menu-content">
+          <h1 class="config-menu-settings-title">Settings</h1>
+          <br />
+          <hr />
+          <br />
+
+          <table>
+            <th>Wheel Options:</th>
+            <tr>
+              <td colspan="2">
                 <h5>Write your own content, each option in a separate line</h5>
                 <textarea name="" cols="30" rows="8" id="inputs"></textarea>
-                <br/>
-                <hr/>
-                <br/>
-                <table>
-                    <tr>
-                        <td>
-                            <label for="wheelRadius">Wheel Size: </label>
-                        </td>
-                        <td>
-                            <input type="range" name="wheelRadius" id="wheelRadius" min="150" max="400"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="useContainer">Container: </label>
-                        </td>
-                        <td>
-                            <input type="checkbox" name="useContainer" id="useContainer" checked/>
-                        </td>
-                    </tr>
-                    <tr class="ifContainer">
-                        <td>
-                            <label for="containerWidth">Container Width: </label>
-                        </td>
-                        <td>
-                            <input type="range" name="containerWidth" id="containerWidth" min="300" max="500"/>
-                        </td>
-                    </tr>
-                    <tr class="ifContainer">
-                        <td>
-                            <label for="formTitleInput">Form Title: </label>
-                        </td>
-                        <td>
-                            <input type="text" name="formTitleInput" id="formTitleInput"/>
-                        </td>
-                    </tr>
-                    <tr class="ifContainer">
-                        <td>
-                            <label for="formSubTitleInput">Form Sub Title: </label>
-                        </td>
-                        <td>
-                            <input type="text" name="formSubTitleInput" id="formSubTitleInput"/>
-                        </td>
-                    </tr>
-                    <tr class="ifContainer">
-                        <td>
-                            <label for="isTermsCheckboxRequired">Display Terms: </label>
-                        </td>
-                        <td>
-                            <input type="checkbox" name="isTermsCheckboxRequired" id="isTermsCheckboxRequired" checked/>
-                        </td>
-                    </tr>
-                    <tr class="ifContainer ifTerms">
-                        <td>
-                            <label for="termsTextInput">Terms Text: </label>
-                        </td>
-                        <td>
-                            <input type="text" name="termsTextInput" id="termsTextInput"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="pointerPosition">Pointer Position: </label>
-                        </td>
-                        <td>
-                            <input type="range" name="pointerPosition" id="pointerPosition" min="0" max="360"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="isUnlimitedSpins">Unlimited Spins: </label>
-                        </td>
-                        <td>
-                            <input type="checkbox" name="isUnlimitedSpins" id="isUnlimitedSpins" checked/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="maxSpins">Limit Spins: </label>
-                        </td>
-                        <td>
-                            <input type="range" name="maxSpins" id="maxSpins" min="0" max="5"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="isRemoveEnabled">Enable Remove Result: </label>
-                        </td>
-                        <td>
-                            <input type="checkbox" name="isRemoveEnabled" id="isRemoveEnabled"/>
-                        </td>
-                    </tr>
-                    <!-- <tr>
-                        <td>
-                            <label for="customPointer">Custom Pointer: </label>
-                        </td>
-                        <td>
-                            <input type="file" name="customPointer" id="customPointer" accept="image/png, image/jpeg" />
-                        </td>
-                    </tr> -->
-
-                </table>
-            </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="wheelRadius">Wheel Size: </label>
+              </td>
+              <td>
+                <input type="range" name="wheelRadius" id="wheelRadius" min="150" max="400" />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="isUnlimitedSpins">Unlimited Spins: </label>
+              </td>
+              <td>
+                <input type="checkbox" name="isUnlimitedSpins" id="isUnlimitedSpins" checked />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="maxSpins">Limit Spins: </label>
+              </td>
+              <td>
+                <input type="range" name="maxSpins" id="maxSpins" min="0" max="5" />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="isRemoveEnabled">Enable Remove Result: </label>
+              </td>
+              <td>
+                <input type="checkbox" name="isRemoveEnabled" id="isRemoveEnabled" />
+              </td>
+            </tr>
+            <th>Container Options:</th>
+            <tr>
+              <td>
+                <label for="useContainer">Side Form: </label>
+              </td>
+              <td>
+                <input type="checkbox" name="useContainer" id="useContainer" checked />
+              </td>
+            </tr>
+            <tr class="ifContainer">
+              <td>
+                <label for="containerWidth">Container Width: </label>
+              </td>
+              <td>
+                <input type="range" name="containerWidth" id="containerWidth" min="300" max="500" />
+              </td>
+            </tr>
+            <tr class="ifContainer">
+              <td>
+                <label for="formTitleInput">Form Title: </label>
+              </td>
+              <td>
+                <input type="text" name="formTitleInput" id="formTitleInput" />
+              </td>
+            </tr>
+            <tr class="ifContainer">
+              <td>
+                <label for="formSubTitleInput">Form Sub Title: </label>
+              </td>
+              <td>
+                <input type="text" name="formSubTitleInput" id="formSubTitleInput" />
+              </td>
+            </tr>
+            <th>Terms Options:</th>
+            <tr class="ifContainer">
+              <td>
+                <label for="isTermsCheckboxRequired">Display Terms: </label>
+              </td>
+              <td>
+                <input type="checkbox" name="isTermsCheckboxRequired" id="isTermsCheckboxRequired" checked />
+              </td>
+            </tr>
+            <tr class="ifContainer ifTerms">
+              <td>
+                <label for="termsTextInput">Terms Text: </label>
+              </td>
+              <td>
+                <input type="text" name="termsTextInput" id="termsTextInput" />
+              </td>
+            </tr>
+            <th>Pointer Options:</th>
+            <tr>
+              <td>
+                <label for="customPointer">Custom Pointer: </label>
+              </td>
+              <td>
+                <input type="file" name="customPointer" id="customPointer" accept="image/png, image/jpeg" />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="pointerSize">Pointer Size: </label>
+              </td>
+              <td>
+                <input type="range" name="pointerSize" id="pointerSize" min="40" max="80" />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="pointerPosition">Pointer Position: </label>
+              </td>
+              <td>
+                <input type="range" name="pointerPosition" id="pointerPosition" min="0" max="360" />
+              </td>
+            </tr>
+          </table>
         </div>
-        <div class="main-container">
-            <div class="wheel-container">
-                <div class="pointer-container">
-                    <img class="pointer" src="./pointer3.png" alt="" width="40px">
-                </div>
-                <div class="canvas-container">
-                    <div class="spinning">
-                        <canvas id="myCanvas"></canvas>
-                        <div class="wheelTextContent"></div>
-                    </div>
-                    <div class="inner"></div>
-                </div>
+      </div>
+      <div class="main-container">
+        <div class="wheel-container">
+          <div class="pointer-container">
+            <img class="pointer" src="./pointer3.png" alt="" width="40px" />
+          </div>
+          <div class="canvas-container">
+            <div class="spinning">
+              <canvas id="myCanvas"></canvas>
+              <div class="wheelTextContent"></div>
             </div>
-            <div class="form-container">
-                <h1 id="formTitle"></h1>
-                <h3 id="formSubTitle"></h3>
-                <input type="text" placeholder="Your Email" id="email" name="email"/>
-                <div class="d-flex-row" id="termsContainer">
-                    <input type="checkbox" name="terms" id="terms">
-                    <label for="terms" class="terms-label">
-                        <p id="termsText"></p>
-                    </label>
-                </div>
-                <button class="btn"  id="containerBtn">Try My Luck</button>
-            </div>
+            <div class="inner"></div>
+          </div>
         </div>
+        <div class="form-container">
+          <h1 id="formTitle"></h1>
+          <h3 id="formSubTitle"></h3>
+          <input type="text" placeholder="Your Email" id="email" name="email" />
+          <div class="d-flex-row" id="termsContainer">
+            <input type="checkbox" name="terms" id="terms" />
+            <label for="terms" class="terms-label">
+              <p id="termsText"></p>
+            </label>
+          </div>
+          <button class="btn" id="containerBtn">Try My Luck</button>
+        </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>
