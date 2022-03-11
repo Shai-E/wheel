@@ -36,7 +36,15 @@
               <div class="settings-section-content">
                 <div class="label-input-column">
                   <label for="wheelRadius">Wheel Size: </label>
-                  <input type="range" name="wheelRadius" id="wheelRadius" min="150" max="400" />
+                  <input
+                    type="range"
+                    name="wheelRadius"
+                    id="wheelRadius"
+                    min="150"
+                    max="400"
+                    oninput="this.title=this.value;"
+                    onmouseover="this.title=this.value;"
+                  />
                 </div>
                 <div class="label-input-row">
                   <label for="isUnlimitedSpins">Unlimited Spins: </label>
@@ -44,7 +52,15 @@
                 </div>
                 <div class="label-input-column">
                   <label for="maxSpins">Limit Spins: </label>
-                  <input type="range" name="maxSpins" id="maxSpins" min="0" max="5" />
+                  <input
+                    type="range"
+                    name="maxSpins"
+                    id="maxSpins"
+                    min="0"
+                    max="5"
+                    oninput="this.title=this.value;"
+                    onmouseover="this.title=this.value;"
+                  />
                 </div>
                 <div class="label-input-row">
                   <label for="isRemoveEnabled">Enable Remove Result: </label>
@@ -62,7 +78,15 @@
                 <div class="ifContainer regular-fit">
                   <div class="label-input-column">
                     <label for="containerWidth">Container Width: </label>
-                    <input type="range" name="containerWidth" id="containerWidth" min="300" max="500" />
+                    <input
+                      type="range"
+                      name="containerWidth"
+                      id="containerWidth"
+                      min="300"
+                      max="500"
+                      oninput="this.title=this.value;"
+                      onmouseover="this.title=this.value;"
+                    />
                   </div>
                   <div class="label-input-row">
                     <label for="formTitleInput">Form Title: </label>
@@ -99,11 +123,27 @@
                 </div>
                 <div class="label-input-column">
                   <label for="pointerSize">Pointer Size: </label>
-                  <input type="range" name="pointerSize" id="pointerSize" min="40" max="80" />
+                  <input
+                    type="range"
+                    name="pointerSize"
+                    id="pointerSize"
+                    min="40"
+                    max="80"
+                    oninput="this.title=this.value;"
+                    onmouseover="this.title=this.value;"
+                  />
                 </div>
                 <div class="label-input-column">
                   <label for="pointerPosition">Pointer Position: </label>
-                  <input type="range" name="pointerPosition" id="pointerPosition" min="0" max="360" />
+                  <input
+                    type="range"
+                    name="pointerPosition"
+                    id="pointerPosition"
+                    min="0"
+                    max="360"
+                    oninput="this.title=this.value;"
+                    onmouseover="this.title=this.value;"
+                  />
                 </div>
               </div>
             </div>
