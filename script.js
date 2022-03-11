@@ -456,6 +456,6 @@
 
 
     // TODO: Upload file to customize pointer
-    // TODO: Add "spins you have left", "display result" to settings
+    // TODO: Add "spins you have left", "display result", "spin speed" and "spin time" to settings
     // TODO: Improve UI
 })()
