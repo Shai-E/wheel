@@ -26,123 +26,88 @@
           <br />
           <hr />
           <br />
-
-          <table>
-            <th>Wheel Options:</th>
-            <tr>
-              <td colspan="2">
-                <h5>Write your own content, each option in a separate line</h5>
-                <textarea name="" cols="30" rows="8" id="inputs"></textarea>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="wheelRadius">Wheel Size: </label>
-              </td>
-              <td>
-                <input type="range" name="wheelRadius" id="wheelRadius" min="150" max="400" />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="isUnlimitedSpins">Unlimited Spins: </label>
-              </td>
-              <td>
-                <input type="checkbox" name="isUnlimitedSpins" id="isUnlimitedSpins" checked />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="maxSpins">Limit Spins: </label>
-              </td>
-              <td>
-                <input type="range" name="maxSpins" id="maxSpins" min="0" max="5" />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="isRemoveEnabled">Enable Remove Result: </label>
-              </td>
-              <td>
-                <input type="checkbox" name="isRemoveEnabled" id="isRemoveEnabled" />
-              </td>
-            </tr>
-            <th>Container Options:</th>
-            <tr>
-              <td>
-                <label for="useContainer">Side Form: </label>
-              </td>
-              <td>
-                <input type="checkbox" name="useContainer" id="useContainer" checked />
-              </td>
-            </tr>
-            <tr class="ifContainer">
-              <td>
-                <label for="containerWidth">Container Width: </label>
-              </td>
-              <td>
-                <input type="range" name="containerWidth" id="containerWidth" min="300" max="500" />
-              </td>
-            </tr>
-            <tr class="ifContainer">
-              <td>
-                <label for="formTitleInput">Form Title: </label>
-              </td>
-              <td>
-                <input type="text" name="formTitleInput" id="formTitleInput" />
-              </td>
-            </tr>
-            <tr class="ifContainer">
-              <td>
-                <label for="formSubTitleInput">Form Sub Title: </label>
-              </td>
-              <td>
-                <input type="text" name="formSubTitleInput" id="formSubTitleInput" />
-              </td>
-            </tr>
-            <th>Terms Options:</th>
-            <tr class="ifContainer">
-              <td>
-                <label for="isTermsCheckboxRequired">Display Terms: </label>
-              </td>
-              <td>
-                <input type="checkbox" name="isTermsCheckboxRequired" id="isTermsCheckboxRequired" checked />
-              </td>
-            </tr>
-            <tr class="ifContainer ifTerms">
-              <td>
-                <label for="termsTextInput">Terms Text: </label>
-              </td>
-              <td>
-                <input type="text" name="termsTextInput" id="termsTextInput" />
-              </td>
-            </tr>
-            <th>Pointer Options:</th>
-            <tr>
-              <td>
-                <label for="customPointer">Custom Pointer: </label>
-              </td>
-              <td>
-                <input type="file" name="customPointer" id="customPointer" accept="image/png, image/jpeg" />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="pointerSize">Pointer Size: </label>
-              </td>
-              <td>
-                <input type="range" name="pointerSize" id="pointerSize" min="40" max="80" />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="pointerPosition">Pointer Position: </label>
-              </td>
-              <td>
-                <input type="range" name="pointerPosition" id="pointerPosition" min="0" max="360" />
-              </td>
-            </tr>
-          </table>
+          <div class="settings-sections-container">
+            <div class="settings-section data-for-slices">
+              <h5>Write your own content, each option in a separate line</h5>
+              <textarea name="" cols="30" rows="8" id="inputs"></textarea>
+            </div>
+            <div class="settings-section">
+              <h4>Wheel Options</h4>
+              <div class="settings-section-content">
+                <div class="label-input-column">
+                  <label for="wheelRadius">Wheel Size: </label>
+                  <input type="range" name="wheelRadius" id="wheelRadius" min="150" max="400" />
+                </div>
+                <div class="label-input-row">
+                  <label for="isUnlimitedSpins">Unlimited Spins: </label>
+                  <input type="checkbox" name="isUnlimitedSpins" id="isUnlimitedSpins" checked />
+                </div>
+                <div class="label-input-column">
+                  <label for="maxSpins">Limit Spins: </label>
+                  <input type="range" name="maxSpins" id="maxSpins" min="0" max="5" />
+                </div>
+                <div class="label-input-row">
+                  <label for="isRemoveEnabled">Enable Remove Result: </label>
+                  <input type="checkbox" name="isRemoveEnabled" id="isRemoveEnabled" />
+                </div>
+              </div>
+            </div>
+            <div class="settings-section">
+              <h4>Container Options</h4>
+              <div class="settings-section-content">
+                <div class="label-input-row">
+                  <label for="useContainer">Side Form: </label>
+                  <input type="checkbox" name="useContainer" id="useContainer" checked />
+                </div>
+                <div class="ifContainer regular-fit">
+                  <div class="label-input-column">
+                    <label for="containerWidth">Container Width: </label>
+                    <input type="range" name="containerWidth" id="containerWidth" min="300" max="500" />
+                  </div>
+                  <div class="label-input-row">
+                    <label for="formTitleInput">Form Title: </label>
+                    <input type="text" name="formTitleInput" id="formTitleInput" />
+                  </div>
+                  <div class="label-input-row">
+                    <label for="formSubTitleInput">Form Sub Title: </label>
+                    <input type="text" name="formSubTitleInput" id="formSubTitleInput" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="settings-section ifContainer">
+              <h4>Terms Options</h4>
+              <div class="settings-section-content">
+                <div class="label-input-row">
+                  <label for="isTermsCheckboxRequired">Display Terms: </label>
+                  <input type="checkbox" name="isTermsCheckboxRequired" id="isTermsCheckboxRequired" checked />
+                </div>
+                <div class="ifTerms">
+                  <div class="label-input-row">
+                    <label for="termsTextInput">Terms Text: </label>
+                    <input type="text" name="termsTextInput" id="termsTextInput" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="settings-section">
+              <h4>Pointer Options</h4>
+              <div class="settings-section-content">
+                <div class="label-input-column">
+                  <label for="customPointer">Custom Pointer: </label>
+                  <input type="file" name="customPointer" id="customPointer" accept="image/png, image/jpeg" />
+                </div>
+                <div class="label-input-column">
+                  <label for="pointerSize">Pointer Size: </label>
+                  <input type="range" name="pointerSize" id="pointerSize" min="40" max="80" />
+                </div>
+                <div class="label-input-column">
+                  <label for="pointerPosition">Pointer Position: </label>
+                  <input type="range" name="pointerPosition" id="pointerPosition" min="0" max="360" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="main-container">

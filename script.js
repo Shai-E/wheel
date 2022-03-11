@@ -181,13 +181,12 @@
     if (currOptions.maxSpins !== null) document.querySelector("#maxSpins").value = currOptions.maxSpins;
     document
       .querySelectorAll(".ifContainer")
-      .forEach((i) => (i.style.display = currOptions.container.display ? "table-row" : "none"));
+      .forEach((i) => (i.style.display = currOptions.container.display ? "flex" : "none"));
     document
       .querySelectorAll(".ifTerms")
       .forEach(
         (i) =>
-          (i.style.display =
-            currOptions.container.displayCheckbox && currOptions.container.display ? "table-row" : "none")
+          (i.style.display = currOptions.container.displayCheckbox && currOptions.container.display ? "flex" : "none")
       );
   };
 
