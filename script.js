@@ -111,11 +111,15 @@
   const hideSpinsLeft = () => {
     document.querySelector("#spins-left").innerText = "";
   };
+  
+    const isSpinsLimited = () => {
+        return currOptions.maxSpins === null;
+    }
 
   const calcSpinsLeft = () => {
     const spinsLeft = numberOfSpins < currOptions.maxSpins ? currOptions.maxSpins - numberOfSpins - 1 : 0;
     document.querySelector("#spins-left").innerText = `Spins You Have Left: ${
-      currOptions.maxSpins === null ? "Unlimited" : spinsLeft
+        isSpinsLimited() ? "Unlimited" : spinsLeft
     }`;
     return spinsLeft;
   };
@@ -132,7 +136,7 @@
     displayBtnText(activeBtn);
     if (
       isTermsValid() &&
-      (isNumberOfSpinsValid(numberOfSpins) || currOptions.maxSpins === null) &&
+      (isNumberOfSpinsValid(numberOfSpins) || isSpinsLimited()) &&
       isEmailValid() &&
       isGoodToGo()
     ) {
@@ -425,7 +429,7 @@
   const randNumOfSpins = () => Math.floor(Math.random() * 10000);
 
   const limitSpins = () => {
-    if (!isNumberOfSpinsValid(numberOfSpins) && currOptions.maxSpins !== null) {
+    if (!isNumberOfSpinsValid(numberOfSpins) && !isSpinsLimited()) {
       disableBtnElement(activeBtn);
       disabledStyle(activeBtn);
     }
@@ -435,7 +439,7 @@
     initActiveBtn();
     activeBtn.onclick = () => spin(activeBtn);
     numberOfSpins = 0;
-    if (isEmailValid() && (isNumberOfSpinsValid(numberOfSpins) || currOptions.maxSpins === null))
+    if (isEmailValid() && (isNumberOfSpinsValid(numberOfSpins) || isSpinsLimited()))
       enabledStyle(activeBtn);
   };
   const increaseNumberOfSpins = () => {
