@@ -24,14 +24,15 @@
     
     let colors = {
         red: "#e74c3c",
-        blue: "#085387"
+        blue: "#085387",
+        redish: "#e74c3c85"
     }
     
     const initOptions = {
         customColorsArr: [],
         maxSpins: null,
         displayPointer: true,
-        removePickedSlice: true,
+        removePickedSlice: false,
         container: {
             width: 300,
             display: true,
@@ -57,18 +58,19 @@
         onSubmit: ()=>{},
     }
     
-    const setColor = (i ,cc) => {
+    const setColor = (sliceIndex ,customPalette) => {
     
-        if(!cc || cc.length === 0){
-            if(i%2===0) {
+        if(!customPalette || customPalette.length === 0){
+            if (currOptions.dataArr.length % 2 !== 0 && sliceIndex === 0) return colors.redish
+            if(sliceIndex%2===0) {
                 return colors.red
             } else {
                 return colors.blue
             }
         } else{
-            for(let cci = cc.length ; cci >0; cci--)
-            if(i%cci===0) {
-                return cc[cci-1]
+            for(let customPaletteIndex = customPalette.length ; customPaletteIndex >0; customPaletteIndex--)
+            if(sliceIndex%customPaletteIndex===0) {
+                return customPalette[customPaletteIndex-1]
             }
         }
     }
@@ -339,6 +341,12 @@
         currMaxSpinsValue = checked ? null : currValue;
         const options = JSON.parse(localStorage.getItem("wheel-preferences"));
         createWheel({...options, maxSpins: currMaxSpinsValue});
+    });
+
+    document.querySelector("#isRemoveEnabled")?.addEventListener("click", (e)=>{
+        const checked = e.target.checked; 
+        const options = JSON.parse(localStorage.getItem("wheel-preferences"));
+        createWheel({...options, removePickedSlice: checked});
     });
 
     document.querySelector("#termsTextInput")?.addEventListener("keyup", (e)=>{
