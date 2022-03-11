@@ -19,6 +19,7 @@
     let spinTaps = 0;
     let currOptions = {}
     let spinResult = "";
+    let goodToGo = true;
 
     
     let colors = {
@@ -87,7 +88,6 @@
     }
     
     const disabledStyle = (btnElement) => {
-        
         btnElement.classList.add("disabled");
         btnElement.setAttribute("disabled", true);
     }
@@ -118,10 +118,12 @@
     const isNumberOfSpinsValid = (numberOfSpins) => {
         return  numberOfSpins < currOptions.maxSpins
     }
+
+ 
     
     const enableBtnElement = () => {
         displayBtnText(activeBtn);
-        if(isTermsValid() && (isNumberOfSpinsValid(numberOfSpins) || currOptions.maxSpins === null) && isEmailValid()){
+        if(isTermsValid() && (isNumberOfSpinsValid(numberOfSpins) || currOptions.maxSpins === null) && isEmailValid() && (currOptions.removePickedSlice && goodToGo || !currOptions.removePickedSlice)){
             activeBtn.onclick = () => spin();
             activeBtn.style.setProperty("--setCursor", "pointer");
             enabledStyle(activeBtn);
@@ -270,8 +272,6 @@
     
     const createWheel=(options)=>{
         currOptions = {...initOptions, ...options, container:{ ...initOptions.container, ...options?.container }};
-        numberOfSpins = +localStorage.getItem('numberOfSpins') || 0;
-
         saveUserOptionsToLocalStorage();
         initWheelOptions();
         setWheelStyle(currOptions);
@@ -386,7 +386,7 @@
     }
     const increaseNumberOfSpins = () => {
         numberOfSpins++;
-        localStorage.setItem('numberOfSpins', numberOfSpins)
+        currOptions.spinsLeft = numberOfSpins;
     };
 
     const calcResult = () => {
@@ -404,20 +404,25 @@
         const getResult = () => {
             const newArr = isBackwards2 && isBackwards ? [...currOptions.dataArr] :[...currOptions.dataArr].reverse()
             spinResult = newArr[resultIndex]
-            currOptions.removePickedSlice && removePickedSlice(spinResult, newArr.filter((_v,i)=>i!==resultIndex));
-
+            currOptions.removePickedSlice && removePickedSlice(spinResult, newArr.filter((_v,i)=>i!==resultIndex))
+            
             return spinResult;
         }
         getResult();
     }
     
     const removePickedSlice = (spinResult, newArr) => {
+        goodToGo = false;
         setTimeout(()=>{
             if(confirm("Your result is: " + spinResult + ". Remove result from wheel?")){
-                const options = JSON.parse(localStorage.getItem("wheel-preferences"));
-                createWheel({...options, dataArr: newArr})
+                currOptions.dataArr = newArr;
+                context.clearRect(0,0,currOptions.radius*2, currOptions.radius*2);
+                wheelTextContent.innerHTML = "";
+                createWheelSlices(currOptions);
             }
-            document.querySelector("#result").innerText = "Last Spin Result: "+ spinResult
+            document.querySelector("#result").innerText = "Last Spin Result: "+ spinResult;
+            goodToGo = true;
+            enableBtnElement(activeBtn)
         },3000)
     }
     
