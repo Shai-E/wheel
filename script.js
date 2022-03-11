@@ -101,7 +101,7 @@
     
     
     const isTermsValid = () => {
-        const shouldDisplayTerms = currOptions.container.displayCheckbox;
+        const shouldDisplayTerms = currOptions.container.displayCheckbox && currOptions.container.display;
         const isTermsChecked = document.querySelector("#terms").checked;
         return (shouldDisplayTerms && isTermsChecked) || !shouldDisplayTerms;
     }
@@ -118,14 +118,16 @@
     }
     
     const isNumberOfSpinsValid = (numberOfSpins) => {
-        return  numberOfSpins < currOptions.maxSpins
+        return  numberOfSpins < currOptions.maxSpins;
     }
 
- 
+    const isGoodToGo = () => {
+        return ((currOptions.removePickedSlice && goodToGo) || !currOptions.removePickedSlice);
+    }
     
     const enableBtnElement = () => {
         displayBtnText(activeBtn);
-        if(isTermsValid() && (isNumberOfSpinsValid(numberOfSpins) || currOptions.maxSpins === null) && isEmailValid() && (currOptions.removePickedSlice && goodToGo || !currOptions.removePickedSlice)){
+        if(isTermsValid() && (isNumberOfSpinsValid(numberOfSpins) || currOptions.maxSpins === null) && isEmailValid() && isGoodToGo()){
             activeBtn.onclick = () => spin();
             activeBtn.style.setProperty("--setCursor", "pointer");
             enabledStyle(activeBtn);
