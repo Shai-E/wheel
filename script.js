@@ -20,6 +20,7 @@
   let currOptions = {};
   let spinResult = "";
   let goodToGo = true;
+  let prevPointerDegrees = 0;
 
   let colors = {
     red: "#e74c3c",
@@ -46,7 +47,10 @@
     },
     radius: 200,
     // dataArr: ["Almost!", "SEO Audit", "Sorry, try again!", "Kickstart Money Course", "Next time!", "Content Audit", "So close!", "SEO Call With My Team"],
-    dataArr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    dataArr: [1,2,3,4,5,6,7,8],
+    avoid: [1,2,3,4,5],
+    winner: 2,
+    winOnce: false,
     buttonText: "Try My Luck",
     buttonBgColor: "#53B753",
     buttonTextColor: "#fff",
@@ -132,13 +136,22 @@
     return (currOptions.removePickedSlice && goodToGo) || !currOptions.removePickedSlice;
   };
 
+  const isItemInBlacklist = (item) => {
+    return currOptions.avoid.includes(item)
+  }
+
+  const shouldAvoid = () => {
+    return currOptions.avoid.length > 0;
+  }
+
   const enableBtnElement = () => {
     displayBtnText(activeBtn);
     if (
       isTermsValid() &&
       (isNumberOfSpinsValid(numberOfSpins) || isSpinsLimited()) &&
       isEmailValid() &&
-      isGoodToGo()
+      isGoodToGo() &&
+      isDataArrValid()
     ) {
       activeBtn.onclick = () => spin();
       activeBtn.style.setProperty("--setCursor", "pointer");
@@ -426,10 +439,54 @@
     document.querySelector("#config-menu-checkbox").checked = false;
   });
 
-  const randNumOfSpins = () => Math.floor(Math.random() * 10000);
+  let previousRandDegs = 0;
+  let toggel = 0;
+
+  const setWinnersDegrees = (randomNumber) => {
+    if (currOptions.winner === null || currOptions.dataArr.indexOf(currOptions.winner) === -1) return randomNumber;
+    const numberOfSlices = currOptions.dataArr.length; 
+    const portionDegrees = 360/ numberOfSlices;
+    const isOdd = currOptions.dataArr.length % 2 !== 0
+    const indexes = currOptions.dataArr.reduce((r,i,idx)=>{
+      return i === currOptions.winner ? [...r, idx] : [...r]
+    },[])
+    const isBigSlices = !isOdd && currOptions.dataArr.length <=4 ? 0 : 1
+    const randIdx = indexes[Math.floor(Math.random() * indexes.length)]
+    // const wantedResult = randIdx === 0 ? currOptions.dataArr.indexOf(currOptions.dataArr[currOptions.dataArr.length-1]) : currOptions.dataArr.indexOf(currOptions.winner)-1;
+    const wantedResultDegrees = portionDegrees * randIdx + portionDegrees;
+    const degreesToRemove = (randomNumber % 360) + (spinTaps % 360) - (currOptions.pointerDegrees)
+    console.log(indexes);
+    const numberOfDegreesAdded = 360 - previousRandDegs;
+    const safety = isOdd ? 0 : 1;
+    const randDegs = 360 - wantedResultDegrees;
+    const result = currOptions.winOnce ? randDegs :randDegs + numberOfDegreesAdded
+
+
+
+
+    if (currOptions.winOnce && previousRandDegs !== 0) {
+      return randomNumber;
+    }
+
+    const temp = - safety + (Math.floor(currOptions.pointerDegrees/2)/* + (isOdd ? portionDegrees / 2 : 0) */) + (isOdd ? 360 - portionDegrees : portionDegrees) + prevPointerDegrees
+    //- currOptions.pointerDegrees + (isOdd ? slicePortion / 2 : 0)
+    prevPointerDegrees = currOptions.pointerDegrees;
+    previousRandDegs = randDegs + temp /* + (toggel && isOdd? 360 - portionDegrees : portionDegrees) */;
+    toggel = !toggel;
+    console.log(spinTaps % 360);
+    return randomNumber - degreesToRemove + result + temp
+  }
+
+  const randNumOfSpins = () => {
+    const randomNumber = Math.floor(Math.random() * 10000) 
+    return setWinnersDegrees(randomNumber)};
+
+  const isDataArrValid = () => {
+    return currOptions.dataArr.length > 0
+  }
 
   const limitSpins = () => {
-    if (!isNumberOfSpinsValid(numberOfSpins) && !isSpinsLimited()) {
+    if ((!isNumberOfSpinsValid(numberOfSpins) && !isSpinsLimited()) || !isDataArrValid()) {
       disableBtnElement(activeBtn);
       disabledStyle(activeBtn);
     }
@@ -447,29 +504,90 @@
     currOptions.spinsLeft = numberOfSpins;
   };
 
+  
   const calcResult = () => {
     const numberOfSlices = currOptions.dataArr.length;
     const isOdd = numberOfSlices % 2 !== 0;
     const slicePortion = 360 / numberOfSlices;
     const currDegAfterSpin = (spinTaps % 360) - currOptions.pointerDegrees + (isOdd ? slicePortion / 2 : 0);
+    let degToAdd = 0;
     const fullDeg = currDegAfterSpin / slicePortion;
     const isBackwards2 = fullDeg < 0;
-    const spinDeg = Math.floor(fullDeg - slicePortion * numberOfSpins);
-    const isBackwards = spinDeg < 0;
-
+    let spinDeg = Math.floor(fullDeg - slicePortion * numberOfSpins);
+    let isBackwards = spinDeg < 0;
+    let isBack = isBackwards2 && isBackwards;
     let resultIndex = isBackwards ? Math.floor(Math.abs(fullDeg)) : spinDeg;
-
-    const getResult = () => {
-      const newArr = isBackwards2 && isBackwards ? [...currOptions.dataArr] : [...currOptions.dataArr].reverse();
+    const newArr = isBackwards2 && isBackwards ? [...currOptions.dataArr] : [...currOptions.dataArr].reverse();
+    spinResult = newArr[resultIndex];
+    let rand = spinTaps + randNumOfSpins();
+    
+    const calcAvoid = () => {
+      degToAdd++;
+      spinDeg = Math.floor(fullDeg - slicePortion * numberOfSpins) + degToAdd;
+      isBackwards = spinDeg < 0;
+      isBack = isBackwards2 && isBackwards;
+      resultIndex = isBackwards ? Math.floor(Math.abs(fullDeg)) : spinDeg;
+      // newArr = isBackwards2 && isBackwards ? [...currOptions.dataArr] : [...currOptions.dataArr].reverse();
       spinResult = newArr[resultIndex];
+      rand = rand + ((resultIndex < newArr.length - 1) ? slicePortion : (slicePortion)*(numberOfSlices) ) ;
+      console.log('avoided ' + spinResult);
+    }
+    
+    const getResult = (spinResult) => {
+      // const newArr = isBackwards2 && isBackwards ? [...currOptions.dataArr] : [...currOptions.dataArr].reverse();
+      // spinResult = newArr[resultIndex];
       removePickedSlice(
         spinResult,
+        newArr.filter((_v, i) => i !== resultIndex)
+        );
+        // console.log(spinResult);
+        return ;
+      };
+      
+    if(shouldAvoid()) {
+      let safeNumOfIterations = 0;
+      while (isItemInBlacklist(spinResult) && safeNumOfIterations < newArr.length + 1) {
+        // calcAvoid();
+        safeNumOfIterations++;
+      }
+      spinTaps = rand;
+      getResult(spinResult)
+      document.querySelector(".spinning").style.setProperty("--random", rand);
+    }
+    
+    
+  };
+
+  /* 
+  const getResult = () => {
+      const newArr = isBackwards2 && isBackwards ? [...currOptions.dataArr] : [...currOptions.dataArr].reverse();
+      spinResult = newArr[resultIndex];
+      console.log(spinResult);
+      let rand = spinTaps + randNumOfSpins();
+      if(shouldAvoid()){
+        let safeNumOfIterations = 0;
+        while (isItemInBlacklist(spinResult) && safeNumOfIterations < newArr.length+1) {
+          console.log('avoided ' + spinResult);
+          // if(!(isBackwards2 && isBackwards)) {
+          // }
+          // spinResult = (resultIndex - 1 > 0) ? newArr[resultIndex - 1 ]: newArr[newArr.length - 1]
+          // resultIndex--;
+          // rand = rand + ((resultIndex < newArr.length - 1) ? slicePortion : (slicePortion)*(numberOfSlices) ) ;
+          safeNumOfIterations++;
+          // console.log(spinResult);
+        }
+      }
+      document.querySelector(".spinning").style.setProperty("--random", rand);
+      spinTaps = rand;
+      removePickedSlice(
+        // spinResult,
         newArr.filter((_v, i) => i !== resultIndex)
       );
       return spinResult;
     };
-    getResult();
-  };
+    console.log("result ", getResult());
+  
+  */
 
   const removePickedSlice = (spinResult, newArr) => {
     goodToGo = false;
@@ -490,9 +608,6 @@
     if (!isEmailValid() && currOptions.container.display) {
       return;
     }
-    const rand = spinTaps + randNumOfSpins();
-    document.querySelector(".spinning").style.setProperty("--random", rand);
-    spinTaps = rand;
     calcResult();
     calcSpinsLeft();
     increaseNumberOfSpins();
