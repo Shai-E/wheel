@@ -47,7 +47,7 @@
     },
     radius: 200,
     // dataArr: ["Almost!", "SEO Audit", "Sorry, try again!", "Kickstart Money Course", "Next time!", "Content Audit", "So close!", "SEO Call With My Team"],
-    dataArr: [1,2,3,4,5,6,7,8],
+    dataArr: [1,2,3,4,5,6,7,8,9,10],
     avoid: [1,2,3,4,5],
     winner: 2,
     winOnce: false,
@@ -441,40 +441,50 @@
 
   let previousRandDegs = 0;
   let toggel = 0;
+  let oldMakeLookRandom = 0;
 
   const setWinnersDegrees = (randomNumber) => {
     if (currOptions.winner === null || currOptions.dataArr.indexOf(currOptions.winner) === -1) return randomNumber;
-    const numberOfSlices = currOptions.dataArr.length; 
-    const portionDegrees = 360/ numberOfSlices;
-    const isOdd = currOptions.dataArr.length % 2 !== 0
+
+    const datasetSize = currOptions.dataArr.length;
+    const isOdd = datasetSize % 2 !== 0;
+    const slicePortionDegrees = 360 / datasetSize;
+    const initDeg = previousRandDegs === 0 ? -360/datasetSize/2 + (isOdd?-slicePortionDegrees/2:0) : 0
+    
     const indexes = currOptions.dataArr.reduce((r,i,idx)=>{
       return i === currOptions.winner ? [...r, idx] : [...r]
     },[])
-    const isBigSlices = !isOdd && currOptions.dataArr.length <=4 ? 0 : 1
-    const randIdx = indexes[Math.floor(Math.random() * indexes.length)]
-    // const wantedResult = randIdx === 0 ? currOptions.dataArr.indexOf(currOptions.dataArr[currOptions.dataArr.length-1]) : currOptions.dataArr.indexOf(currOptions.winner)-1;
-    const wantedResultDegrees = portionDegrees * randIdx + portionDegrees;
-    const degreesToRemove = (randomNumber % 360) + (spinTaps % 360) - (currOptions.pointerDegrees)
-    console.log(indexes);
-    const numberOfDegreesAdded = 360 - previousRandDegs;
-    const safety = isOdd ? 0 : 1;
+    
+    const reverseIndex = (originalIndex) => {
+      if(true) return originalIndex;
+      const reversedIndex = datasetSize - (originalIndex+1)
+      return reversedIndex
+    }
+    
+    const makeLookRandom = true ? Math.floor(Math.random() * slicePortionDegrees) - (slicePortionDegrees/2): 0;
+    const randomNumOfFullSpins = true ? randomNumber - (randomNumber%360) : 0;
+    
+    const randIdx = indexes[Math.floor(Math.random() * indexes.length)]    
+    spinResult = currOptions.dataArr[reverseIndex(randIdx)];
+    console.log("wantedResult", spinResult);
+
+    const wantedResultDegrees = ((slicePortionDegrees * (randIdx)));
+    console.log("needed degrees", wantedResultDegrees);
+    console.log("pointer degrees", currOptions.pointerDegrees);
+    const circleStart = - currOptions.pointerDegrees  ;
     const randDegs = 360 - wantedResultDegrees;
-    const result = currOptions.winOnce ? randDegs :randDegs + numberOfDegreesAdded
-
-
+    const numberOfDegreesAdded = 360 - previousRandDegs - prevPointerDegrees;
+    const result = initDeg - circleStart + randomNumOfFullSpins  + randDegs + numberOfDegreesAdded + makeLookRandom - oldMakeLookRandom;
+    previousRandDegs = randDegs;
+    oldMakeLookRandom = makeLookRandom;
+    prevPointerDegrees = currOptions.pointerDegrees;
 
 
     if (currOptions.winOnce && previousRandDegs !== 0) {
       return randomNumber;
     }
 
-    const temp = - safety + (Math.floor(currOptions.pointerDegrees/2)/* + (isOdd ? portionDegrees / 2 : 0) */) + (isOdd ? 360 - portionDegrees : portionDegrees) + prevPointerDegrees
-    //- currOptions.pointerDegrees + (isOdd ? slicePortion / 2 : 0)
-    prevPointerDegrees = currOptions.pointerDegrees;
-    previousRandDegs = randDegs + temp /* + (toggel && isOdd? 360 - portionDegrees : portionDegrees) */;
-    toggel = !toggel;
-    console.log(spinTaps % 360);
-    return randomNumber - degreesToRemove + result + temp
+    return result;
   }
 
   const randNumOfSpins = () => {
