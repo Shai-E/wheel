@@ -48,8 +48,8 @@
     radius: 200,
     // dataArr: ["Almost!", "SEO Audit", "Sorry, try again!", "Kickstart Money Course", "Next time!", "Content Audit", "So close!", "SEO Call With My Team"],
     dataArr: [1,2,3,4,5,6,7,8,9,10],
-    avoid: [1,2,3,4,5],
-    winner: 2,
+    avoid: [1,2,3],
+    winner: null,
     winOnce: false,
     buttonText: "Try My Luck",
     buttonBgColor: "#53B753",
@@ -321,7 +321,20 @@
     setWheelSliceContent(i, radius, dataArr);
   };
 
+  const initGlobals = () => {
+    activeBtn = null;
+    inactiveBtn = null;
+    numberOfSpins = 0;
+    spinTaps = 0;
+    currOptions = {};
+    spinResult = "";
+    goodToGo = true;
+    prevPointerDegrees = 0;
+    // document.querySelector(".spinning").style.setProperty("--random", 0);
+  }
+
   const createWheel = (options) => {
+    // initGlobals()
     currOptions = { ...initOptions, ...options, container: { ...initOptions.container, ...options?.container } };
     saveUserOptionsToLocalStorage();
     initWheelOptions();
@@ -422,6 +435,12 @@
     saveUserOptionsToLocalStorage();
   });
 
+  document.querySelector("#winnerPick")?.addEventListener("keyup", (e) => {
+    const winner = e.target.value;
+    const options = JSON.parse(localStorage.getItem("wheel-preferences"));
+    createWheel({ ...options, winner: winner});
+  });
+
   const changeBtnDisabledStatusByValidityOfInputs = () => {
     initActiveBtn();
     enableBtnElement(activeBtn);
@@ -440,11 +459,11 @@
   });
 
   let previousRandDegs = 0;
-  let toggel = 0;
   let oldMakeLookRandom = 0;
 
   const setWinnersDegrees = (randomNumber) => {
-    if (currOptions.winner === null || currOptions.dataArr.indexOf(currOptions.winner) === -1) return randomNumber;
+    console.log(currOptions.winner, currOptions.dataArr.indexOf(`${currOptions.winner}`));
+    if (currOptions.winner === null || (currOptions.dataArr.indexOf(currOptions.winner) === -1 && currOptions.dataArr.indexOf(+currOptions.winner) === -1 )) return randomNumber;
 
     const datasetSize = currOptions.dataArr.length;
     const isOdd = datasetSize % 2 !== 0;
@@ -452,29 +471,20 @@
     const initDeg = previousRandDegs === 0 ? -360/datasetSize/2 + (isOdd?-slicePortionDegrees/2:0) : 0
     
     const indexes = currOptions.dataArr.reduce((r,i,idx)=>{
-      return i === currOptions.winner ? [...r, idx] : [...r]
+      return `${i}` === `${currOptions.winner}` ? [...r, idx] : r
     },[])
-    
-    const reverseIndex = (originalIndex) => {
-      if(true) return originalIndex;
-      const reversedIndex = datasetSize - (originalIndex+1)
-      return reversedIndex
-    }
+
+    console.log(indexes);
     
     const makeLookRandom = true ? Math.floor(Math.random() * slicePortionDegrees) - (slicePortionDegrees/2): 0;
     const randomNumOfFullSpins = true ? randomNumber - (randomNumber%360) : 0;
-    
     const randIdx = indexes[Math.floor(Math.random() * indexes.length)]    
-    spinResult = currOptions.dataArr[reverseIndex(randIdx)];
-    console.log("wantedResult", spinResult);
-
+    // spinResult = currOptions.dataArr[randIdx];
     const wantedResultDegrees = ((slicePortionDegrees * (randIdx)));
-    console.log("needed degrees", wantedResultDegrees);
-    console.log("pointer degrees", currOptions.pointerDegrees);
-    const circleStart = - currOptions.pointerDegrees  ;
+    const circleStart = - currOptions.pointerDegrees;
     const randDegs = 360 - wantedResultDegrees;
     const numberOfDegreesAdded = 360 - previousRandDegs - prevPointerDegrees;
-    const result = initDeg - circleStart + randomNumOfFullSpins  + randDegs + numberOfDegreesAdded + makeLookRandom - oldMakeLookRandom;
+    const result = +initDeg - circleStart + randomNumOfFullSpins  + randDegs + numberOfDegreesAdded + makeLookRandom - oldMakeLookRandom;
     previousRandDegs = randDegs;
     oldMakeLookRandom = makeLookRandom;
     prevPointerDegrees = currOptions.pointerDegrees;
@@ -516,117 +526,121 @@
 
   
   const calcResult = () => {
+
+    // console.log("hi");
     const numberOfSlices = currOptions.dataArr.length;
     const isOdd = numberOfSlices % 2 !== 0;
     const slicePortion = 360 / numberOfSlices;
+    spinTaps = spinTaps + randNumOfSpins();;
     const currDegAfterSpin = (spinTaps % 360) - currOptions.pointerDegrees + (isOdd ? slicePortion / 2 : 0);
     let degToAdd = 0;
     const fullDeg = currDegAfterSpin / slicePortion;
     const isBackwards2 = fullDeg < 0;
     let spinDeg = Math.floor(fullDeg - slicePortion * numberOfSpins);
     let isBackwards = spinDeg < 0;
-    let isBack = isBackwards2 && isBackwards;
+    // let isBack = isBackwards2 && isBackwards;
     let resultIndex = isBackwards ? Math.floor(Math.abs(fullDeg)) : spinDeg;
     const newArr = isBackwards2 && isBackwards ? [...currOptions.dataArr] : [...currOptions.dataArr].reverse();
     spinResult = newArr[resultIndex];
-    let rand = spinTaps + randNumOfSpins();
-    
-    const calcAvoid = () => {
-      degToAdd++;
-      spinDeg = Math.floor(fullDeg - slicePortion * numberOfSpins) + degToAdd;
-      isBackwards = spinDeg < 0;
-      isBack = isBackwards2 && isBackwards;
-      resultIndex = isBackwards ? Math.floor(Math.abs(fullDeg)) : spinDeg;
-      // newArr = isBackwards2 && isBackwards ? [...currOptions.dataArr] : [...currOptions.dataArr].reverse();
-      spinResult = newArr[resultIndex];
-      rand = rand + ((resultIndex < newArr.length - 1) ? slicePortion : (slicePortion)*(numberOfSlices) ) ;
-      console.log('avoided ' + spinResult);
-    }
-    
-    const getResult = (spinResult) => {
-      // const newArr = isBackwards2 && isBackwards ? [...currOptions.dataArr] : [...currOptions.dataArr].reverse();
-      // spinResult = newArr[resultIndex];
-      removePickedSlice(
-        spinResult,
-        newArr.filter((_v, i) => i !== resultIndex)
-        );
-        // console.log(spinResult);
-        return ;
+
+    // const calcAvoid = () => {
+    //     degToAdd++;
+    //     spinDeg = Math.floor(fullDeg + degToAdd - slicePortion * numberOfSpins);
+    //     isBackwards = spinDeg < 0;
+    //     isBack = isBackwards2 && isBackwards;
+    //     resultIndex = isBackwards ? Math.floor(Math.abs(fullDeg)) : spinDeg;
+    //     spinResult = newArr[resultIndex];
+    //     spinTaps = spinTaps + ((resultIndex < newArr.length - 1) ? slicePortion : (slicePortion)*(numberOfSlices) ) ;
+    //     console.log('avoided ' + spinResult);
+    //     return {result: (resultIndex < newArr.length - 1) ? resultIndex+1 : 0}
+    //   }
+      
+      const getResult = (currResult) => {
+        
+        removePickedSlice(newArr.filter((_v, i) => i !== currResult));
+        document.querySelector(".spinning").style.setProperty("--random", spinTaps);
+        document.querySelector("#result").innerText = "Last Spin Result: " + spinResult;
+        return;
       };
       
-    if(shouldAvoid()) {
-      let safeNumOfIterations = 0;
-      while (isItemInBlacklist(spinResult) && safeNumOfIterations < newArr.length + 1) {
-        // calcAvoid();
-        safeNumOfIterations++;
-      }
-      spinTaps = rand;
-      getResult(spinResult)
-      document.querySelector(".spinning").style.setProperty("--random", rand);
-    }
-    
-    
-  };
-
-  /* 
-  const getResult = () => {
-      const newArr = isBackwards2 && isBackwards ? [...currOptions.dataArr] : [...currOptions.dataArr].reverse();
-      spinResult = newArr[resultIndex];
-      console.log(spinResult);
-      let rand = spinTaps + randNumOfSpins();
-      if(shouldAvoid()){
+      // let newRand = spinTaps;
+      let newResult = spinResult;
+      if(shouldAvoid()) {
         let safeNumOfIterations = 0;
-        while (isItemInBlacklist(spinResult) && safeNumOfIterations < newArr.length+1) {
-          console.log('avoided ' + spinResult);
-          // if(!(isBackwards2 && isBackwards)) {
-          // }
-          // spinResult = (resultIndex - 1 > 0) ? newArr[resultIndex - 1 ]: newArr[newArr.length - 1]
-          // resultIndex--;
-          // rand = rand + ((resultIndex < newArr.length - 1) ? slicePortion : (slicePortion)*(numberOfSlices) ) ;
-          safeNumOfIterations++;
-          // console.log(spinResult);
-        }
-      }
-      document.querySelector(".spinning").style.setProperty("--random", rand);
-      spinTaps = rand;
-      removePickedSlice(
-        // spinResult,
-        newArr.filter((_v, i) => i !== resultIndex)
-      );
-      return spinResult;
-    };
-    console.log("result ", getResult());
-  
-  */
-
-  const removePickedSlice = (spinResult, newArr) => {
-    goodToGo = false;
-    setTimeout(() => {
-      if (currOptions.removePickedSlice && confirm("Your result is: " + spinResult + ". Remove result from wheel?")) {
-        currOptions.dataArr = newArr;
-        context.clearRect(0, 0, currOptions.radius * 2, currOptions.radius * 2);
-        wheelTextContent.innerHTML = "";
-        createWheelSlices(currOptions);
-      }
-      document.querySelector("#result").innerText = "Last Spin Result: " + spinResult;
-      goodToGo = true;
-      enableBtnElement(activeBtn);
-    }, 3000);
-  };
-
-  const spin = () => {
-    if (!isEmailValid() && currOptions.container.display) {
-      return;
-    }
-    calcResult();
-    calcSpinsLeft();
-    increaseNumberOfSpins();
-    initActiveBtn();
-    limitSpins();
-    currOptions.onSubmit();
-  };
-
-  createWheel({ allowConfigGui: true });
+        while (isItemInBlacklist(spinResult) && safeNumOfIterations < newArr.length + 1) {
+              // const { result } = calcAvoid();
+              // console.log();
+              // newRand = rand;
+              // newResult = result
+              // console.log("spin before", spinResult);
+              // spinResult = newArr[result]
+              // console.log("spin after", spinResult);
+              safeNumOfIterations++;
+            }
+            // document.querySelector(".spinning").style.setProperty("--random", rand);
+          } 
+          
+          getResult(newResult)    
+        };
+        
+        /* 
+        const getResult = () => {
+          const newArr = isBackwards2 && isBackwards ? [...currOptions.dataArr] : [...currOptions.dataArr].reverse();
+          spinResult = newArr[resultIndex];
+          console.log(spinResult);
+          let rand = spinTaps + randNumOfSpins();
+          if(shouldAvoid()){
+            let safeNumOfIterations = 0;
+            while (isItemInBlacklist(spinResult) && safeNumOfIterations < newArr.length+1) {
+              console.log('avoided ' + spinResult);
+              // if(!(isBackwards2 && isBackwards)) {
+                // }
+                // spinResult = (resultIndex - 1 > 0) ? newArr[resultIndex - 1 ]: newArr[newArr.length - 1]
+                // resultIndex--;
+                // rand = rand + ((resultIndex < newArr.length - 1) ? slicePortion : (slicePortion)*(numberOfSlices) ) ;
+                safeNumOfIterations++;
+                // console.log(spinResult);
+              }
+            }
+            document.querySelector(".spinning").style.setProperty("--random", rand);
+            spinTaps = rand;
+            removePickedSlice(
+              // spinResult,
+              newArr.filter((_v, i) => i !== resultIndex)
+              );
+              return spinResult;
+            };
+            console.log("result ", getResult());
+            
+            */
+           
+           const removePickedSlice = (newArr) => {
+             goodToGo = false;
+             setTimeout(() => {
+               if (currOptions.removePickedSlice && confirm("Your result is: " + spinResult + ". Remove result from wheel?")) {
+                 currOptions.dataArr = newArr;
+                 context.clearRect(0, 0, currOptions.radius * 2, currOptions.radius * 2);
+                 wheelTextContent.innerHTML = "";
+                 createWheelSlices(currOptions);
+                }
+                goodToGo = true;
+                enableBtnElement(activeBtn);
+              }, 3000);
+            };
+            
+            const spin = () => {
+              if (!isEmailValid() && currOptions.container.display) {
+                return;
+              }
+              calcResult();
+              calcSpinsLeft();
+              increaseNumberOfSpins();
+              initActiveBtn();
+              limitSpins();
+              currOptions.onSubmit();
+            };
+            
+            createWheel({ allowConfigGui: true });
 
   // TODO: Upload file to customize pointer
   // TODO: Add "spins you have left", "display result", "spin speed" and "spin time" to settings
