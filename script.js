@@ -47,8 +47,8 @@
     },
     radius: 200,
     // dataArr: ["Almost!", "SEO Audit", "Sorry, try again!", "Kickstart Money Course", "Next time!", "Content Audit", "So close!", "SEO Call With My Team"],
-    dataArr: [1,2,3,4,5,6,7,8,9,10],
-    avoid: [1,2,3],
+    dataArr: [1,"shai",3,4,5,6, 7,8,9,10],
+    avoid: [1, "shai", 3],
     winner: null,
     winOnce: false,
     buttonText: "Try My Luck",
@@ -136,8 +136,12 @@
     return (currOptions.removePickedSlice && goodToGo) || !currOptions.removePickedSlice;
   };
 
-  const isItemInBlacklist = (item) => {
-    return currOptions.avoid.includes(item)
+  const isItemInBlacklist = (item, nextItem) => {
+    return {
+      next: currOptions.avoid.includes(nextItem),
+      this: currOptions.avoid.includes(item)
+    
+    }
   }
 
   const shouldAvoid = () => {
@@ -542,7 +546,7 @@
     let resultIndex = isBackwards ? Math.floor(Math.abs(fullDeg)) : spinDeg;
     const newArr = isBackwards2 && isBackwards ? [...currOptions.dataArr] : [...currOptions.dataArr].reverse();
     spinResult = newArr[resultIndex];
-
+    nextSpinResultWouldBe = newArr[resultIndex === newArr.length ? 0 :resultIndex+1]
     // const calcAvoid = () => {
     //     degToAdd++;
     //     spinDeg = Math.floor(fullDeg + degToAdd - slicePortion * numberOfSpins);
@@ -555,92 +559,117 @@
     //     return {result: (resultIndex < newArr.length - 1) ? resultIndex+1 : 0}
     //   }
       
-      const getResult = (currResult) => {
-        
-        removePickedSlice(newArr.filter((_v, i) => i !== currResult));
-        document.querySelector(".spinning").style.setProperty("--random", spinTaps);
-        document.querySelector("#result").innerText = "Last Spin Result: " + spinResult;
-        return;
-      };
+    const getResult = (currResult) => {
       
-      // let newRand = spinTaps;
-      let newResult = spinResult;
-      if(shouldAvoid()) {
-        let safeNumOfIterations = 0;
-        while (isItemInBlacklist(spinResult) && safeNumOfIterations < newArr.length + 1) {
-              // const { result } = calcAvoid();
-              // console.log();
-              // newRand = rand;
-              // newResult = result
-              // console.log("spin before", spinResult);
-              // spinResult = newArr[result]
-              // console.log("spin after", spinResult);
-              safeNumOfIterations++;
-            }
-            // document.querySelector(".spinning").style.setProperty("--random", rand);
-          } 
-          
-          getResult(newResult)    
-        };
+      removePickedSlice(newArr.filter((_v, i) => i !== currResult));
+      document.querySelector(".spinning").style.setProperty("--random", spinTaps);
+      document.querySelector("#result").innerText = "Last Spin Result: " + spinResult;
+      return;
+    };
+    
+    // let newRand = spinTaps;
+    let newResult = spinResult;
+    if(shouldAvoid()) {
+      let safeNumOfIterations = 0;
+
+
+      // const recursiveAction = (safeNumOfIterations=0) => {
+      //   if (!isItemInBlacklist(spinResult, nextSpinResultWouldBe).this || safeNumOfIterations === currOptions.dataArr.length + 1) {
+      //     return;
+      //   }
+      //   degToAdd++;
+      //   spinDeg = Math.floor(fullDeg - slicePortion * numberOfSpins);
+      //   isBackwards = spinDeg < 0;
+      //   isBack = isBackwards2 && isBackwards;
+      //   resultIndex = (isBackwards ? Math.floor(Math.abs(fullDeg)) : spinDeg) + (isBack ? currOptions.dataArr.length-degToAdd-1 : degToAdd);
+      //   spinResult = newArr[resultIndex];
+      //   nextSpinResultWouldBe = newArr[resultIndex === newArr.length - 1 ? 0 :resultIndex+1]
+
+      //   console.log(isBack);
+      //   spinTaps = spinTaps + ((resultIndex < newArr.length - 1) ?  (isBack? slicePortion: -slicePortion) : (slicePortion)*(numberOfSlices) )
+      //   console.log('avoided ' + spinResult);
+      //   if(isItemInBlacklist(spinResult,nextSpinResultWouldBe).this && !isItemInBlacklist(spinResult,nextSpinResultWouldBe).next) {
+      //       console.log("next item "+ nextSpinResultWouldBe + " is not in blacklist ", isItemInBlacklist(spinResult,nextSpinResultWouldBe).next);
+      //       spinResult = nextSpinResultWouldBe;
+      //       resultIndex = resultIndex === newArr.length - 1 ? 0 :resultIndex+1
+      //       spinTaps = spinTaps + ((resultIndex < newArr.length - 1) ? slicePortion : (slicePortion)*(numberOfSlices) ) ;
+      //       return;
+      //   }
+      //   if(isItemInBlacklist(spinResult,nextSpinResultWouldBe).this && isItemInBlacklist(spinResult,nextSpinResultWouldBe).next){
+      //     console.log("next item "+nextSpinResultWouldBe+" is in blacklist",isItemInBlacklist(spinResult,nextSpinResultWouldBe).next);
+      //     spinResult = nextSpinResultWouldBe;
+      //     resultIndex = resultIndex === newArr.length - 1 ? 0 :resultIndex+1
+      //     spinTaps = spinTaps + ((resultIndex < newArr.length - 1) ? slicePortion : (slicePortion)*(numberOfSlices) ) ;
+      //     recursiveAction(safeNumOfIterations+1)
+      //   } else {
+      //     console.log("else");
+      //     return;
+      //   }
+      // }
+      // recursiveAction()
+      if(isItemInBlacklist(spinResult, nextSpinResultWouldBe).this) {
         
-        /* 
-        const getResult = () => {
-          const newArr = isBackwards2 && isBackwards ? [...currOptions.dataArr] : [...currOptions.dataArr].reverse();
-          spinResult = newArr[resultIndex];
-          console.log(spinResult);
-          let rand = spinTaps + randNumOfSpins();
-          if(shouldAvoid()){
-            let safeNumOfIterations = 0;
-            while (isItemInBlacklist(spinResult) && safeNumOfIterations < newArr.length+1) {
-              console.log('avoided ' + spinResult);
-              // if(!(isBackwards2 && isBackwards)) {
-                // }
-                // spinResult = (resultIndex - 1 > 0) ? newArr[resultIndex - 1 ]: newArr[newArr.length - 1]
-                // resultIndex--;
-                // rand = rand + ((resultIndex < newArr.length - 1) ? slicePortion : (slicePortion)*(numberOfSlices) ) ;
-                safeNumOfIterations++;
-                // console.log(spinResult);
-              }
-            }
-            document.querySelector(".spinning").style.setProperty("--random", rand);
-            spinTaps = rand;
-            removePickedSlice(
-              // spinResult,
-              newArr.filter((_v, i) => i !== resultIndex)
-              );
-              return spinResult;
-            };
-            console.log("result ", getResult());
-            
-            */
-           
-           const removePickedSlice = (newArr) => {
-             goodToGo = false;
-             setTimeout(() => {
-               if (currOptions.removePickedSlice && confirm("Your result is: " + spinResult + ". Remove result from wheel?")) {
-                 currOptions.dataArr = newArr;
-                 context.clearRect(0, 0, currOptions.radius * 2, currOptions.radius * 2);
-                 wheelTextContent.innerHTML = "";
-                 createWheelSlices(currOptions);
-                }
-                goodToGo = true;
-                enableBtnElement(activeBtn);
-              }, 3000);
-            };
-            
-            const spin = () => {
-              if (!isEmailValid() && currOptions.container.display) {
-                return;
-              }
-              calcResult();
-              calcSpinsLeft();
-              increaseNumberOfSpins();
-              initActiveBtn();
-              limitSpins();
-              currOptions.onSubmit();
-            };
-            
-            createWheel({ allowConfigGui: true });
+      }
+
+      while (isItemInBlacklist(spinResult, nextSpinResultWouldBe).this && isItemInBlacklist(spinResult, nextSpinResultWouldBe).next && safeNumOfIterations < newArr.length + 1) {
+        safeNumOfIterations++;
+        spinResult = nextSpinResultWouldBe;
+        resultIndex = resultIndex === newArr.length - 1 ? 0 :resultIndex+1;
+        console.log("before",nextSpinResultWouldBe);
+        nextSpinResultWouldBe = newArr[resultIndex];
+        console.log("next",nextSpinResultWouldBe);
+        spinTaps = spinTaps + ((resultIndex < newArr.length - 1) ? slicePortion : (slicePortion)*(numberOfSlices) ) ;
+        if (!isItemInBlacklist(spinResult, nextSpinResultWouldBe).next) {
+        spinResult = nextSpinResultWouldBe;
+        resultIndex = resultIndex === newArr.length - 1 ? 0 :resultIndex+1;
+        spinTaps = spinTaps + ((resultIndex < newArr.length - 1) ? slicePortion : (slicePortion)*(numberOfSlices) ) ;
+          newResult = spinResult;
+          return;
+        }
+
+        
+
+            // const { result } = calcAvoid();
+            // console.log();
+            // newRand = rand;
+            // newResult = result
+            // console.log("spin before", spinResult);
+            // spinResult = newArr[result]
+            // console.log("spin after", spinResult);
+          }
+          // document.querySelector(".spinning").style.setProperty("--random", rand);
+        } 
+        
+        getResult(newResult)    
+    };
+    
+  const removePickedSlice = (newArr) => {
+    goodToGo = false;
+    setTimeout(() => {
+      if (currOptions.removePickedSlice && confirm("Your result is: " + spinResult + ". Remove result from wheel?")) {
+        currOptions.dataArr = newArr;
+        context.clearRect(0, 0, currOptions.radius * 2, currOptions.radius * 2);
+        wheelTextContent.innerHTML = "";
+        createWheelSlices(currOptions);
+      }
+      goodToGo = true;
+      enableBtnElement(activeBtn);
+    }, 3000);
+  };
+  
+  const spin = () => {
+    if (!isEmailValid() && currOptions.container.display) {
+      return;
+    }
+    calcResult();
+    calcSpinsLeft();
+    increaseNumberOfSpins();
+    initActiveBtn();
+    limitSpins();
+    currOptions.onSubmit();
+  };
+  
+  createWheel({ allowConfigGui: true });
 
   // TODO: Upload file to customize pointer
   // TODO: Add "spins you have left", "display result", "spin speed" and "spin time" to settings
