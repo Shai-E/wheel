@@ -47,8 +47,8 @@
     },
     radius: 200,
     // dataArr: ["Almost!", "SEO Audit", "Sorry, try again!", "Kickstart Money Course", "Next time!", "Content Audit", "So close!", "SEO Call With My Team"],
-    dataArr: [1,"shai",3,4,5,6, 7,8,9,10],
-    avoid: [1, "shai", 3],
+    dataArr: ["1","shai","3","4","3","6", "3","8","9","10"],
+    avoid: null,
     winner: null,
     winOnce: false,
     buttonText: "Try My Luck",
@@ -137,15 +137,15 @@
   };
 
   const isItemInBlacklist = (item, nextItem) => {
+    // console.log(currOptions.avoid.includes(nextItem));
     return {
       next: currOptions.avoid.includes(nextItem),
       this: currOptions.avoid.includes(item)
-    
     }
   }
 
   const shouldAvoid = () => {
-    return currOptions.avoid.length > 0;
+    return currOptions.avoid && currOptions.avoid.length > 0;
   }
 
   const enableBtnElement = () => {
@@ -352,6 +352,12 @@
     const arr = e.target.value.split("\n").filter((i) => i != false);
     const options = JSON.parse(localStorage.getItem("wheel-preferences"));
     createWheel({ ...options, dataArr: arr });
+  });
+
+  document.querySelector("#inputsToAvoid")?.addEventListener("keyup", (e) => {
+    const arr = e.target.value.split("\n").filter((i) => i != false);
+    const options = JSON.parse(localStorage.getItem("wheel-preferences"));
+    createWheel({ ...options, avoid: arr });
   });
 
   document.querySelector("#useContainer")?.addEventListener("click", (e) => {
@@ -572,6 +578,10 @@
     if(shouldAvoid()) {
       let safeNumOfIterations = 0;
 
+      const calcNewSpinTaps = (resultIndex, newArr, slicePortion, numberOfSlices) => {
+        spinTaps = spinTaps + ((resultIndex < newArr.length - 1) ? slicePortion : (slicePortion)*(numberOfSlices) ) ;
+        console.log("hi",spinTaps % 360);
+      }
 
       // const recursiveAction = (safeNumOfIterations=0) => {
       //   if (!isItemInBlacklist(spinResult, nextSpinResultWouldBe).this || safeNumOfIterations === currOptions.dataArr.length + 1) {
@@ -588,28 +598,32 @@
       //   console.log(isBack);
       //   spinTaps = spinTaps + ((resultIndex < newArr.length - 1) ?  (isBack? slicePortion: -slicePortion) : (slicePortion)*(numberOfSlices) )
       //   console.log('avoided ' + spinResult);
+
+
+        
       //   if(isItemInBlacklist(spinResult,nextSpinResultWouldBe).this && !isItemInBlacklist(spinResult,nextSpinResultWouldBe).next) {
       //       console.log("next item "+ nextSpinResultWouldBe + " is not in blacklist ", isItemInBlacklist(spinResult,nextSpinResultWouldBe).next);
       //       spinResult = nextSpinResultWouldBe;
       //       resultIndex = resultIndex === newArr.length - 1 ? 0 :resultIndex+1
-      //       spinTaps = spinTaps + ((resultIndex < newArr.length - 1) ? slicePortion : (slicePortion)*(numberOfSlices) ) ;
-      //       return;
+      //       calcNewSpinTaps(resultIndex, newArr, slicePortion, numberOfSlices)
+      //         return;
       //   }
       //   if(isItemInBlacklist(spinResult,nextSpinResultWouldBe).this && isItemInBlacklist(spinResult,nextSpinResultWouldBe).next){
       //     console.log("next item "+nextSpinResultWouldBe+" is in blacklist",isItemInBlacklist(spinResult,nextSpinResultWouldBe).next);
       //     spinResult = nextSpinResultWouldBe;
       //     resultIndex = resultIndex === newArr.length - 1 ? 0 :resultIndex+1
-      //     spinTaps = spinTaps + ((resultIndex < newArr.length - 1) ? slicePortion : (slicePortion)*(numberOfSlices) ) ;
+      //     calcNewSpinTaps(resultIndex, newArr, slicePortion, numberOfSlices)
       //     recursiveAction(safeNumOfIterations+1)
       //   } else {
       //     console.log("else");
+
       //     return;
       //   }
       // }
       // recursiveAction()
-      if(isItemInBlacklist(spinResult, nextSpinResultWouldBe).this) {
-        
-      }
+      // if(isItemInBlacklist(spinResult, nextSpinResultWouldBe).this) {
+      //   console.log("what now?");
+      // }
 
       while (isItemInBlacklist(spinResult, nextSpinResultWouldBe).this && isItemInBlacklist(spinResult, nextSpinResultWouldBe).next && safeNumOfIterations < newArr.length + 1) {
         safeNumOfIterations++;
@@ -618,12 +632,12 @@
         console.log("before",nextSpinResultWouldBe);
         nextSpinResultWouldBe = newArr[resultIndex];
         console.log("next",nextSpinResultWouldBe);
-        spinTaps = spinTaps + ((resultIndex < newArr.length - 1) ? slicePortion : (slicePortion)*(numberOfSlices) ) ;
+        calcNewSpinTaps(resultIndex, newArr, slicePortion, numberOfSlices)
         if (!isItemInBlacklist(spinResult, nextSpinResultWouldBe).next) {
         spinResult = nextSpinResultWouldBe;
         resultIndex = resultIndex === newArr.length - 1 ? 0 :resultIndex+1;
-        spinTaps = spinTaps + ((resultIndex < newArr.length - 1) ? slicePortion : (slicePortion)*(numberOfSlices) ) ;
-          newResult = spinResult;
+        calcNewSpinTaps(resultIndex, newArr, slicePortion, numberOfSlices)
+        newResult = spinResult;
           return;
         }
 
